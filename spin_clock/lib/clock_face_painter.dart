@@ -92,10 +92,21 @@ class ClockFacePainter extends CustomPainter {
   }
 
   void _drawClockFace({bool hourMode = true, Canvas canvas, int digitOffset}) {
+    Offset center = Offset(0.0, 0.0);
+    canvas.drawPath(
+       Path()
+          ..addOval(
+              Rect.fromCircle(center: center, radius: radius+10))
+          ..fillType = PathFillType.evenOdd,
+        Paint() 
+        ..color= Colors.black.withAlpha(30)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 40)
+    );
     dialPaint.color = Color(0xFFFAFAFA);
-    canvas.drawCircle(Offset(0.0, 0.0), radius, dialPaint);
+    canvas.drawCircle(center, radius, dialPaint);
     dialPaint.color = Colors.white;
-    canvas.drawCircle(Offset(0.0, 0.0), radius-borderWidth, dialPaint);
+    canvas.drawCircle(center, radius-borderWidth, dialPaint);
+    
     dialPaint.color = Color(0xFF999999);
     for (var i = 0; i < 60; i++ ) {
       dialPaint.strokeWidth = 0.5;

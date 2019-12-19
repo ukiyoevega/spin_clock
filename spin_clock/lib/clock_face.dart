@@ -13,6 +13,8 @@ class ClockFace extends StatefulWidget {
 }
 
 class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
+  DateTime _dateTime = DateTime.now();
+  Timer _timer;
   double durationSlowMode;
   AnimationController digitAnimationController; 
   Animation digitAnimation;
@@ -20,6 +22,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _updateTime();
     durationSlowMode = widget.durationSlowMode;
     digitAnimationController = new AnimationController(vsync: this, duration: new Duration(milliseconds: 10000));
     digitAnimation = new Tween(begin: 0.0, end: 1.0).animate(digitAnimationController);
@@ -40,14 +43,25 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   @override
   void dispose() {
     digitAnimationController.dispose();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  void _updateTime() {
+    setState(() {
+      _dateTime = DateTime.now();
+      _timer = Timer(
+        Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
+        _updateTime,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     timeDilation = durationSlowMode; // figure out
     Container container = Container(child: 
-      CustomPaint(painter: ClockFacePainter(trackerPosition: digitAnimation.value))
+      CustomPaint(painter: ClockFacePainter(dateTime: _dateTime, trackerPosition: digitAnimation.value))
     );
     return container;
   }

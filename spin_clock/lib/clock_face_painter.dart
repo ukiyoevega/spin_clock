@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class ClockFacePainter extends CustomPainter {
+  final double trackerPosition;
+  final Paint trackerPaint = new Paint()
+          ..color = Colors.black
+          ..style = PaintingStyle.fill;
   double radius;
   double angle;
   double borderWidth;
@@ -9,6 +13,8 @@ class ClockFacePainter extends CustomPainter {
   final TextPainter textPainter = TextPainter(textAlign: TextAlign.center,
           textDirection: TextDirection.rtl,
         );
+
+  ClockFacePainter({this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -19,9 +25,10 @@ class ClockFacePainter extends CustomPainter {
 
     canvas.translate(size.width*0.05, size.height);
     _drawClockFace(canvas: canvas, digitOffset: 3);
-
+    _drawTracker(canvas);
     canvas.translate(size.width*0.9, -size.height);
     _drawClockFace(hourMode: false, canvas: canvas, digitOffset: 0);
+    _drawTracker(canvas);
 
     canvas.restore();
   }
@@ -30,7 +37,6 @@ class ClockFacePainter extends CustomPainter {
   bool shouldRepaint(ClockFacePainter oldDelegate) {
     return true;
   }
-
 
   void _drawDigit({bool hourMode = true, Canvas canvas, int i, int digitOffset}) {
     canvas.save();
@@ -65,5 +71,14 @@ class ClockFacePainter extends CustomPainter {
       }
       canvas.rotate(angle);
     }
+  }
+
+  void _drawTracker(Canvas canvas) {
+    final trackerAngle = 2 * pi * trackerPosition - (pi / 2);
+    final x = cos(trackerAngle) * radius ;
+    final y = sin(trackerAngle) * radius ;
+    final center = new Offset(x, y);
+    canvas.drawCircle(center, 10.0, trackerPaint);
+    debugPrint('position $trackerPosition center $Offset(x, y) angle $trackerAngle');
   }
 }

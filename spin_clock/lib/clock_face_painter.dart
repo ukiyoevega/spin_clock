@@ -24,7 +24,7 @@ class ClockFacePainter extends CustomPainter {
     radius = size.width/2;
     canvas.save();
 
-    canvas.translate(size.width*0.05, size.height);
+    canvas.translate(size.width*0.02, size.height);
     _drawClockFace(canvas: canvas, digitOffset: 3);
     _drawTracker(canvas);
     canvas.translate(size.width*0.9, -size.height);

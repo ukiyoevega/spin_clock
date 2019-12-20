@@ -101,7 +101,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     Stack stack = Stack(
         children: <Widget>[
           CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacePainter(dateTime: _dateTime, trackerPosition: digitAnimation.value)),
-          Positioned(left: 0, bottom: 0, child: Padding(padding: const EdgeInsets.all(8),child: weatherInfo)),
+          Positioned(left: 20, bottom: 20, child: weatherInfo),
         ]);
     return stack;
   }

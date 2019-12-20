@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
         (ClockModel model) {
           var container = Container(
           color: Color(0xFFECECEC),
-          child: ClipRect(child: ClockFace(durationSlowMode: 1.0))
+          child: ClipRect(child: ClockFace(model: model, durationSlowMode: 1.0))
           );
           return container;
       }

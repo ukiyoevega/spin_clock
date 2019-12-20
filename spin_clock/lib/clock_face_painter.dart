@@ -89,6 +89,7 @@ class ClockFacePainter extends CustomPainter {
       if (isCurrentMinute) { canvas.translate(-30, 120); }
       textPainter.text= new TextSpan(
         text: '${minuteText.toString().padLeft(2, '0')}', 
+        children: isCurrentMinute ? [TextSpan(text: dateTime.hour > 12 ? " PM" : " AM", style: largeTextStyle.copyWith(fontSize: 35, fontWeight: FontWeight.w200))]: [],
         style: isCurrentMinute ? largeTextStyle : minuteTextStyle);
     }
     canvas.rotate(-angle*i);

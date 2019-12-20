@@ -71,8 +71,12 @@ class ClockFacePainter extends CustomPainter {
     int minuteText = _minuteText(i: i);
     bool isCurrentHour = hourText == currentHour;
     bool isCurrentMinute = minuteText == dateTime.minute;
-    canvas.drawLine(
+    if ((isCurrentHour && (i+digitOffset)%5==0) || isCurrentMinute) {
+      canvas.drawLine(new Offset(0.0, -radius), new Offset(0.0, -radius+borderWidth+16), dialPaint);
+    } else {
+      canvas.drawLine(
           new Offset(0.0, -radius), new Offset(0.0, -radius+borderWidth), dialPaint); 
+    } 
     // 5 lines per digit in hour mode
     if (hourMode && (i+digitOffset)%5!=0) { return; }
     canvas.save();

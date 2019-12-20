@@ -65,24 +65,27 @@ class ClockFacePainter extends CustomPainter {
     }
   }
 
-  void _drawDigit({bool hourMode = true, Canvas canvas, int i, int digitOffset}) {
+  void _drawDigitAndLine({bool hourMode = true, Canvas canvas, int i, int digitOffset}) {
+    int hourText = _hourText(i: i, digitOffset: digitOffset);
+    int currentHour = (dateTime.hour > 12) ? (dateTime.hour - 12) : dateTime.hour;
+    int minuteText = _minuteText(i: i);
+    bool isCurrentHour = hourText == currentHour;
+    bool isCurrentMinute = minuteText == dateTime.minute;
+    canvas.drawLine(
+          new Offset(0.0, -radius), new Offset(0.0, -radius+borderWidth), dialPaint); 
+    // 5 lines per digit in hour mode
+    if (hourMode && (i+digitOffset)%5!=0) { return; }
     canvas.save();
     canvas.translate(0.0, -radius+borderWidth+14);
     if (hourMode) {
-      int hourText = _hourText(i: i, digitOffset: digitOffset);
-      int currentHour = (dateTime.hour > 12) ? (dateTime.hour - 12) : dateTime.hour;
-      bool isCurrent = hourText == currentHour;
-      if (isCurrent) { canvas.translate(0, 40); }
+      if (isCurrentHour) { canvas.translate(10, 60); }
       textPainter.text= new TextSpan(text: '$hourText',
-        style: isCurrent ? largeTextStyle : hourTextStyle);
+        style: isCurrentHour ? largeTextStyle : hourTextStyle);
     } else {
-      int minuteText = _minuteText(i: i);
-      bool isCurrent = minuteText == dateTime.minute;
-      if (isCurrent) { canvas.translate(-10, 70); }
+      if (isCurrentMinute) { canvas.translate(-30, 120); }
       textPainter.text= new TextSpan(
         text: '${minuteText.toString().padLeft(2, '0')}', 
-        children: [], // isCurrent ? [TextSpan(text: " PM", style: largeTextStyle.copyWith(fontSize: 30))]: 
-        style: isCurrent ? largeTextStyle : minuteTextStyle);
+        style: isCurrentMinute ? largeTextStyle : minuteTextStyle);
     }
     canvas.rotate(-angle*i);
     textPainter.layout();
@@ -110,15 +113,7 @@ class ClockFacePainter extends CustomPainter {
     dialPaint.color = Color(0xFF999999);
     for (var i = 0; i < 60; i++ ) {
       dialPaint.strokeWidth = 0.5;
-      canvas.drawLine(
-          new Offset(0.0, -radius), new Offset(0.0, -radius+borderWidth), dialPaint);
-      if (hourMode) {
-        if ((i+digitOffset)%5==0){
-        _drawDigit(canvas: canvas, i: i, digitOffset: digitOffset);
-       }
-      } else {
-        _drawDigit(hourMode: false, canvas: canvas, i: i, digitOffset: digitOffset);
-      }
+      _drawDigitAndLine(hourMode: hourMode, canvas: canvas, i: i, digitOffset: digitOffset);
       canvas.rotate(angle);
     }
   }

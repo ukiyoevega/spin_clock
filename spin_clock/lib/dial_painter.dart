@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class ClockFacePainter extends CustomPainter {
+class DialPainter extends CustomPainter {
   final double trackerPosition;
   final DateTime dateTime;
   final Paint trackerPaint = new Paint()
@@ -10,12 +10,11 @@ class ClockFacePainter extends CustomPainter {
   double radius;
   double angle;
   double borderWidth;
-  final Paint dialPaint = new Paint();
   final TextPainter textPainter = TextPainter(textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
         );
 
-  ClockFacePainter({this.dateTime, this.trackerPosition});
+  DialPainter({this.dateTime, this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -25,22 +24,21 @@ class ClockFacePainter extends CustomPainter {
     canvas.save();
 
     canvas.translate(size.width*0.04, size.height*0.94); // left margin 0.04, bottom margin 0.06
-    _drawClockFace(canvas: canvas, digitOffset: 3);
+    _drawDigits(canvas: canvas, digitOffset: 3);
     _drawTracker(canvas);
     canvas.translate(size.width*0.92, -size.height*0.88); // right margin 0.04, top margin 0.06
-    _drawClockFace(hourMode: false, canvas: canvas, digitOffset: 0);
+    _drawDigits(hourMode: false, canvas: canvas, digitOffset: 0);
     _drawTracker(canvas);
-
     canvas.restore();
   }
 
   @override
-  bool shouldRepaint(ClockFacePainter oldDelegate) {
+  bool shouldRepaint(DialPainter oldDelegate) {
     return true;
   }
   
-  final hourTextStyle = TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:13.0);
-  final minuteTextStyle = TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:10.0);
+  final hourTextStyle = TextStyle(color: Color(0xFF999999), fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:13.0);
+  final minuteTextStyle = TextStyle(color: Color(0xFF999999), fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:10.0);
   final largeTextStyle = TextStyle(color: Color(0xFF333333), fontFamily: 'Poppins', fontWeight: FontWeight.w400, fontSize:115.0);
 
   int _hourText({int i, int digitOffset}) { // text offset by digitOffset on the clock
@@ -65,18 +63,12 @@ class ClockFacePainter extends CustomPainter {
     }
   }
 
-  void _drawDigitAndLine({bool hourMode = true, Canvas canvas, int i, int digitOffset}) {
+  void _drawDigit({bool hourMode = true, Canvas canvas, int i, int digitOffset}) {
     int hourText = _hourText(i: i, digitOffset: digitOffset);
     int currentHour = (dateTime.hour > 12) ? (dateTime.hour - 12) : dateTime.hour;
     int minuteText = _minuteText(i: i);
     bool isCurrentHour = hourText == currentHour;
     bool isCurrentMinute = minuteText == dateTime.minute;
-    if ((isCurrentHour && (i+digitOffset)%5==0) || isCurrentMinute) {
-      canvas.drawLine(new Offset(0.0, -radius), new Offset(0.0, -radius+borderWidth+16), dialPaint);
-    } else {
-      canvas.drawLine(
-          new Offset(0.0, -radius), new Offset(0.0, -radius+borderWidth), dialPaint); 
-    } 
     // 5 lines per digit in hour mode
     if (hourMode && (i+digitOffset)%5!=0) { return; }
     canvas.save();
@@ -99,26 +91,9 @@ class ClockFacePainter extends CustomPainter {
     canvas.restore();
   }
 
-  void _drawClockFace({bool hourMode = true, Canvas canvas, int digitOffset}) {
-    Offset center = Offset(0.0, 0.0);
-    canvas.drawPath(
-       Path()
-          ..addOval(
-              Rect.fromCircle(center: center, radius: radius+10))
-          ..fillType = PathFillType.evenOdd,
-        Paint() 
-        ..color= Colors.black.withAlpha(30)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 40)
-    );
-    dialPaint.color = Color(0xFFFAFAFA);
-    canvas.drawCircle(center, radius, dialPaint);
-    dialPaint.color = Colors.white;
-    canvas.drawCircle(center, radius-borderWidth, dialPaint);
-    
-    dialPaint.color = Color(0xFF999999);
+  void _drawDigits({bool hourMode = true, Canvas canvas, int digitOffset}) {
     for (var i = 0; i < 60; i++ ) {
-      dialPaint.strokeWidth = 0.5;
-      _drawDigitAndLine(hourMode: hourMode, canvas: canvas, i: i, digitOffset: digitOffset);
+      _drawDigit(hourMode: hourMode, canvas: canvas, i: i, digitOffset: digitOffset);
       canvas.rotate(angle);
     }
   }

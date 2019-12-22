@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'clock_face_painter.dart';
+import 'dial_painter.dart';
+import 'clock_faces_painter.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_clock_helper/model.dart';
 
@@ -100,7 +101,8 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     );
     Stack stack = Stack(
         children: <Widget>[
-          CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacePainter(dateTime: _dateTime, trackerPosition: digitAnimation.value)),
+          CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacesPainter()),
+          CustomPaint(size: MediaQuery.of(context).size, painter: DialPainter(dateTime: _dateTime, trackerPosition: digitAnimation.value)),
           Positioned(left: 20, bottom: 20, child: weatherInfo),
         ]);
     return stack;

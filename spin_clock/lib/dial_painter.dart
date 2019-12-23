@@ -24,11 +24,9 @@ class DialPainter extends CustomPainter {
     canvas.save();
 
     canvas.translate(size.width*0.04, size.height*0.94); // left margin 0.04, bottom margin 0.06
-    _drawDigits(canvas: canvas, digitOffset: 3);
-    _drawTracker(canvas);
+    _drawHourDigits(canvas: canvas, digitOffset: 3);
     canvas.translate(size.width*0.92, -size.height*0.88); // right margin 0.04, top margin 0.06
-    _drawDigits(hourMode: false, canvas: canvas, digitOffset: 0);
-    _drawTracker(canvas);
+    _drawMinuteDigits(canvas: canvas);
     canvas.restore();
   }
 
@@ -63,47 +61,58 @@ class DialPainter extends CustomPainter {
     }
   }
 
-  void _drawDigit({bool hourMode = true, Canvas canvas, int i, int digitOffset}) {
-    int hourText = _hourText(i: i, digitOffset: digitOffset);
-    int currentHour = (dateTime.hour > 12) ? (dateTime.hour - 12) : dateTime.hour;
-    int minuteText = _minuteText(i: i);
-    bool isCurrentHour = hourText == currentHour;
+  void _drawMinuteDigits({Canvas canvas}) {
+    canvas.save();
+    canvas.rotate(-angle*trackerPosition);
+    for (var i = 0; i < 60; i++ ) {
+      _drawMinuteDigit(canvas: canvas, i: i);
+      canvas.rotate(angle);
+    }
+    canvas.restore();
+  }
+
+  void _drawHourDigits({Canvas canvas, int digitOffset}) {
+    for (var i = 0; i < 60; i++ ) {
+      _drawHourDigit(canvas: canvas, i: i, digitOffset: digitOffset);
+      canvas.rotate(angle);
+    }
+  }
+
+  void _drawMinuteDigit({Canvas canvas, int i}) {
+    // if (i==38 || i==39) { return; }
+    var minuteText = _minuteText(i: i);
     bool isCurrentMinute = minuteText == dateTime.minute;
-    // 5 lines per digit in hour mode
-    if (hourMode && (i+digitOffset)%5!=0) { return; }
     canvas.save();
     canvas.translate(0.0, -radius+borderWidth+14);
-    if (hourMode) {
-      if (isCurrentHour) { canvas.translate(10, 60); }
+    // if (isCurrentMinute) { canvas.translate(-30, 120); }
+    textPainter.text= new TextSpan(
+      text: '${minuteText.toString().padLeft(2, '0')}', 
+      // children: isCurrentMinute ? [TextSpan(text: dateTime.hour > 12 ? " PM" : " AM", style: largeTextStyle.copyWith(fontSize: 35, fontWeight: FontWeight.w200))]: [],
+      // style: isCurrentMinute ? largeTextStyle : minuteTextStyle);
+      style:  minuteTextStyle);
+    canvas.rotate(-angle*i+angle*trackerPosition);
+    textPainter.layout();
+    var painterOffset = new Offset(-(textPainter.width/2), -(textPainter.height/2));
+    textPainter.paint(canvas, painterOffset);
+    canvas.restore();
+    // debugPrint('now: ${DateTime.now()} ${minuteText.toString().padLeft(2, '0')} pos: ${trackerPosition*100.toInt()}');
+  }
+
+  void _drawHourDigit({Canvas canvas, int i, int digitOffset}) {
+    if ((i+digitOffset)%5!=0) { return; }
+    int hourText = _hourText(i: i, digitOffset: digitOffset);
+    int currentHour = (dateTime.hour > 12) ? (dateTime.hour - 12) : dateTime.hour;
+    bool isCurrentHour = hourText == currentHour;
+    // 5 lines per digit in hour mode
+    canvas.save();
+    canvas.translate(0.0, -radius+borderWidth+14);
+    if (isCurrentHour) { canvas.translate(10, 60); }
       textPainter.text= new TextSpan(text: '$hourText',
         style: isCurrentHour ? largeTextStyle : hourTextStyle);
-    } else {
-      if (isCurrentMinute) { canvas.translate(-30, 120); }
-      textPainter.text= new TextSpan(
-        text: '${minuteText.toString().padLeft(2, '0')}', 
-        children: isCurrentMinute ? [TextSpan(text: dateTime.hour > 12 ? " PM" : " AM", style: largeTextStyle.copyWith(fontSize: 35, fontWeight: FontWeight.w200))]: [],
-        style: isCurrentMinute ? largeTextStyle : minuteTextStyle);
-    }
     canvas.rotate(-angle*i);
     textPainter.layout();
     var painterOffset = new Offset(-(textPainter.width/2), -(textPainter.height/2));
     textPainter.paint(canvas, painterOffset);
     canvas.restore();
-  }
-
-  void _drawDigits({bool hourMode = true, Canvas canvas, int digitOffset}) {
-    for (var i = 0; i < 60; i++ ) {
-      _drawDigit(hourMode: hourMode, canvas: canvas, i: i, digitOffset: digitOffset);
-      canvas.rotate(angle);
-    }
-  }
-
-  void _drawTracker(Canvas canvas) {
-    final trackerAngle = 2 * pi * trackerPosition - (pi / 2);
-    final x = cos(trackerAngle) * radius ;
-    final y = sin(trackerAngle) * radius ;
-    final center = new Offset(x, y);
-    canvas.drawCircle(center, 10.0, trackerPaint);
-    debugPrint('position $trackerPosition center $Offset(x, y) angle $trackerAngle');
   }
 }

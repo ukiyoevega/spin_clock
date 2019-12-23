@@ -3,7 +3,6 @@ import 'dart:math';
 
 class DialPainter extends CustomPainter {
   final double trackerPosition;
-  final DateTime dateTime;
   final Paint trackerPaint = new Paint()
           ..color = Colors.black
           ..style = PaintingStyle.fill;
@@ -14,7 +13,7 @@ class DialPainter extends CustomPainter {
           textDirection: TextDirection.ltr,
         );
 
-  DialPainter({this.dateTime, this.trackerPosition});
+  DialPainter({this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {

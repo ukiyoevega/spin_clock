@@ -2,27 +2,22 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dial_painter.dart';
 import 'clock_faces_painter.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_clock_helper/model.dart';
 
 class ClockFace extends StatefulWidget {
-  final Offset offset;
-  final double durationSlowMode;
   final ClockModel model;
-  const ClockFace({Key key, this.model, this.offset, this.durationSlowMode}) : super(key: key);
+  const ClockFace({Key key, this.model}) : super(key: key);
   
   @override
   State createState() => _ClockFaceState();
 }
 
 class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
-  DateTime _dateTime = DateTime.now();
   var _temperature = '';
   var _temperatureRange = '';
   var _condition = '';
   var _location = '';
   Timer _timer;
-  double durationSlowMode;
   AnimationController digitAnimationController; 
   Animation digitAnimation;
 
@@ -32,7 +27,6 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     widget.model.addListener(_updateModel);
     _updateTime();
     _updateModel();
-    durationSlowMode = widget.durationSlowMode;
     digitAnimationController = new AnimationController(vsync: this, duration: new Duration(milliseconds: 10000));
     digitAnimation = new Tween(begin: 0.0, end: 1.0).animate(digitAnimationController);
     digitAnimationController.addStatusListener((status) {
@@ -87,7 +81,6 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = durationSlowMode; // figure out
     final weatherInfo = DefaultTextStyle(
       style: TextStyle(color: Color(0xFF333333), fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:12.0),
       child: Column(
@@ -102,7 +95,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     Stack stack = Stack(
         children: <Widget>[
           CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacesPainter()),
-          CustomPaint(size: MediaQuery.of(context).size, painter: DialPainter(dateTime: _dateTime, trackerPosition: digitAnimation.value)),
+          CustomPaint(size: MediaQuery.of(context).size, painter: DialPainter(trackerPosition: digitAnimationController.value)),
           Positioned(left: 20, bottom: 20, child: weatherInfo),
         ]);
     return stack;

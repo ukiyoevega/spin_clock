@@ -96,7 +96,7 @@ class DialPainter extends CustomPainter {
       final textStyle = TextStyle(color: Color.fromRGBO(grayScale, grayScale, grayScale, 1), 
         fontFamily: 'Poppins', 
         fontWeight: FontWeight.w400, 
-        fontSize: 115.0*trackerPosition);
+        fontSize: 10+105.0*trackerPosition);
       canvas.translate(-30*trackerPosition, 120*trackerPosition); 
       textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
     } else {

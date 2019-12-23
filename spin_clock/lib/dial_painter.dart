@@ -9,11 +9,12 @@ class DialPainter extends CustomPainter {
   double radius;
   double angle;
   double borderWidth;
+  final DateTime dateTime;
   final TextPainter textPainter = TextPainter(textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
         );
 
-  DialPainter({this.trackerPosition});
+  DialPainter({this.dateTime, this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {

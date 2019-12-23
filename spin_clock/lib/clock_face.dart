@@ -17,6 +17,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _temperatureRange = '';
   var _condition = '';
   var _location = '';
+  DateTime _dateTime;
   final _animationDuration = Duration(milliseconds: 800);
 
   Timer _timer;
@@ -42,12 +43,19 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
       setState(() {});
     });
     // trigger initial animation
-    DateTime _dateTime = DateTime.now();
+    _dateTime = DateTime.now();
     Timer(Duration(minutes: 1) 
         - Duration(seconds: _dateTime.second) 
         - Duration(milliseconds: _dateTime.millisecond) - _animationDuration,
       () { 
         digitAnimationController.forward();
+        digitAnimationController.addStatusListener((status) {
+          if (status == AnimationStatus.forward) {
+            setState(() {
+              _dateTime = DateTime.now();
+            });
+          }
+        });
       }
     );
   }
@@ -94,7 +102,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     Stack stack = Stack(
         children: <Widget>[
           CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacesPainter()),
-          CustomPaint(size: MediaQuery.of(context).size, painter: DialPainter(trackerPosition: digitAnimationController.value)),
+          CustomPaint(size: MediaQuery.of(context).size, painter: DialPainter(dateTime: _dateTime, trackerPosition: digitAnimationController.value)),
           Positioned(left: 20, bottom: 20, child: weatherInfo),
         ]);
     return stack;

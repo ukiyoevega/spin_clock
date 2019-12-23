@@ -17,30 +17,39 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _temperatureRange = '';
   var _condition = '';
   var _location = '';
+  final _animationDuration = Duration(milliseconds: 800);
+
   Timer _timer;
   AnimationController digitAnimationController; 
-  Animation digitAnimation;
 
   @override
   void initState() {
     super.initState();
     widget.model.addListener(_updateModel);
-    _updateTime();
     _updateModel();
-    digitAnimationController = new AnimationController(vsync: this, duration: new Duration(milliseconds: 10000));
-    digitAnimation = new Tween(begin: 0.0, end: 1.0).animate(digitAnimationController);
+    digitAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
     digitAnimationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        digitAnimationController.repeat();
-      }
+      if (status != AnimationStatus.completed) { return; }
+      final now = DateTime.now();
+      final duration = Duration(minutes: 1) 
+      - Duration(seconds: now.second) 
+      - Duration(milliseconds: now.millisecond) - _animationDuration;
+      new Timer(duration, () {
+        digitAnimationController.forward(from: 0.0);
+      });
     });
-    digitAnimation.addListener(() {
+    digitAnimationController.addListener(() {
       setState(() {});
     });
-
-    new Timer(new Duration(milliseconds: 1000), () {
-      digitAnimationController.forward();
-    });
+    // trigger initial animation
+    DateTime _dateTime = DateTime.now();
+    Timer(Duration(minutes: 1) 
+        - Duration(seconds: _dateTime.second) 
+        - Duration(milliseconds: _dateTime.millisecond) - _animationDuration,
+      () { 
+        digitAnimationController.forward();
+      }
+    );
   }
 
   @override
@@ -66,16 +75,6 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
       _temperatureRange = '(${widget.model.low} - ${widget.model.highString})';
       _condition = widget.model.weatherString;
       _location = widget.model.location;
-    });
-  }
-
-  void _updateTime() {
-    setState(() {
-      _dateTime = DateTime.now();
-      _timer = Timer(
-        Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
-        _updateTime,
-      );
     });
   }
 

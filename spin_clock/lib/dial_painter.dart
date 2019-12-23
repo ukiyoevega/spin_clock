@@ -79,17 +79,31 @@ class DialPainter extends CustomPainter {
   }
 
   void _drawMinuteDigit({Canvas canvas, int i}) {
-    // if (i==38 || i==39) { return; }
     var minuteText = _minuteText(i: i);
-    bool isCurrentMinute = minuteText == dateTime.minute;
     canvas.save();
     canvas.translate(0.0, -radius+borderWidth+14);
-    // if (isCurrentMinute) { canvas.translate(-30, 120); }
-    textPainter.text= new TextSpan(
-      text: '${minuteText.toString().padLeft(2, '0')}', 
-      // children: isCurrentMinute ? [TextSpan(text: dateTime.hour > 12 ? " PM" : " AM", style: largeTextStyle.copyWith(fontSize: 35, fontWeight: FontWeight.w200))]: [],
-      // style: isCurrentMinute ? largeTextStyle : minuteTextStyle);
-      style:  minuteTextStyle);
+    if (i == 38) {
+      int grayScale = 51+102*trackerPosition.toInt(); // 51->153
+      TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontFamily: 'Poppins', fontWeight: FontWeight.w400, fontSize:115.0);
+      final textStyle = TextStyle(color: Color.fromRGBO(grayScale, grayScale, grayScale, 1), 
+          fontFamily: 'Poppins', 
+          fontWeight: trackerPosition == 1 ? FontWeight.w200 : FontWeight.w400, 
+          fontSize: 10.0+105.0*(1-trackerPosition));
+        canvas.translate(-30*(1-trackerPosition), 120*(1-trackerPosition)); 
+        textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
+    } else if (i == 39) {
+      int grayScale = 153-102*trackerPosition.toInt(); // 51->153
+      final textStyle = TextStyle(color: Color.fromRGBO(grayScale, grayScale, grayScale, 1), 
+        fontFamily: 'Poppins', 
+        fontWeight: FontWeight.w400, 
+        fontSize: 115.0*trackerPosition);
+      canvas.translate(-30*trackerPosition, 120*trackerPosition); 
+      textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
+    } else {
+      textPainter.text= new TextSpan(
+        text: '${minuteText.toString().padLeft(2, '0')}', 
+        style:  minuteTextStyle);
+    }
     canvas.rotate(-angle*i+angle*trackerPosition);
     textPainter.layout();
     var painterOffset = new Offset(-(textPainter.width/2), -(textPainter.height/2));

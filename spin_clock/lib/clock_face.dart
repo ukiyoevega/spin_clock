@@ -17,43 +17,43 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _temperature = '';
   var _temperatureRange = '';
   var _condition = '';
-  DateTime _dateTime;
+  DateTime _minute;
   final _animationDuration = Duration(milliseconds: 800);
 
-  Timer _timer;
-  AnimationController digitAnimationController; 
-  Animation curvedAnimation;
+  AnimationController _minuteAnimationController; 
+  Animation _curvedAnimation;
   @override
   void initState() {
     super.initState();
     widget.model.addListener(_updateModel);
     _updateModel();
-    digitAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
-    curvedAnimation = CurvedAnimation(parent: digitAnimationController, curve: Curves.easeInOut);
-    digitAnimationController.addStatusListener((status) {
+    _minuteAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
+    _curvedAnimation = CurvedAnimation(parent: _minuteAnimationController, curve: Curves.easeInOut);
+    // add minute animation listener
+    _minuteAnimationController.addStatusListener((status) {
       if (status != AnimationStatus.completed) { return; }
       final now = DateTime.now();
       final duration = Duration(minutes: 1) 
       - Duration(seconds: now.second) 
       - Duration(milliseconds: now.millisecond) - _animationDuration;
       new Timer(duration, () {
-        digitAnimationController.forward(from: 0.0);
+        _minuteAnimationController.forward(from: 0.0);
       });
     });
-    digitAnimationController.addListener(() {
+    _minuteAnimationController.addListener(() {
       setState(() {});
     });
-    // trigger initial animation
-    _dateTime = DateTime.now();
+    // trigger initial minute animation
+    _minute = DateTime.now();
     Timer(Duration(minutes: 1) 
-        - Duration(seconds: _dateTime.second) 
-        - Duration(milliseconds: _dateTime.millisecond) - _animationDuration,
+        - Duration(seconds: _minute.second) 
+        - Duration(milliseconds: _minute.millisecond) - _animationDuration,
       () { 
-        digitAnimationController.forward();
-        digitAnimationController.addStatusListener((status) {
+        _minuteAnimationController.forward();
+        _minuteAnimationController.addStatusListener((status) {
           if (status == AnimationStatus.forward) {
             setState(() {
-              _dateTime = DateTime.now();
+              _minute = DateTime.now();
             });
           }
         });
@@ -72,8 +72,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    digitAnimationController.dispose();
-    _timer?.cancel();
+    _minuteAnimationController.dispose();
     widget.model.removeListener(_updateModel);
     super.dispose();
   }
@@ -102,8 +101,8 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     Stack stack = Stack(
         children: <Widget>[
           CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacesPainter()),
-          CustomPaint(size: MediaQuery.of(context).size, painter: MinutePainter(dateTime: _dateTime, trackerPosition: curvedAnimation.value)),
-          CustomPaint(size: MediaQuery.of(context).size, painter: HourPainter(dateTime: _dateTime, trackerPosition: curvedAnimation.value)),
+          CustomPaint(size: MediaQuery.of(context).size, painter: MinutePainter(dateTime: _minute, trackerPosition: _curvedAnimation.value)),
+          CustomPaint(size: MediaQuery.of(context).size, painter: HourPainter(dateTime: _minute, trackerPosition: _curvedAnimation.value)),
           Positioned(left: 20, bottom: 20, child: weatherInfo),
         ]);
     return stack;

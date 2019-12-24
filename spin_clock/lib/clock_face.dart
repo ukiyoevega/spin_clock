@@ -18,9 +18,11 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _temperatureRange = '';
   var _condition = '';
   DateTime _minute;
+  DateTime _hour;
   final _animationDuration = Duration(milliseconds: 800);
 
   AnimationController _minuteAnimationController; 
+  AnimationController hourAnimationController; 
   Animation _curvedAnimation;
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     _updateModel();
     _minuteAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
     _curvedAnimation = CurvedAnimation(parent: _minuteAnimationController, curve: Curves.easeInOut);
+    hourAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
     // add minute animation listener
     _minuteAnimationController.addStatusListener((status) {
       if (status != AnimationStatus.completed) { return; }
@@ -43,6 +46,21 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     _minuteAnimationController.addListener(() {
       setState(() {});
     });
+    // add hour animation listener
+    hourAnimationController.addStatusListener((status) {
+      if (status != AnimationStatus.completed) { return; }
+      final now = DateTime.now();
+      final duration = Duration(hours: 1)
+      - Duration(minutes: now.minute) 
+      - Duration(seconds: now.second) 
+      - Duration(milliseconds: now.millisecond) - _animationDuration;
+      new Timer(duration, () {
+        hourAnimationController.forward(from: 0.0);
+      });
+    });
+    hourAnimationController.addListener(() {
+      setState(() {});
+    });
     // trigger initial minute animation
     _minute = DateTime.now();
     Timer(Duration(minutes: 1) 
@@ -54,6 +72,23 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
           if (status == AnimationStatus.forward) {
             setState(() {
               _minute = DateTime.now();
+            });
+          }
+        });
+      }
+    );
+    // trigger initial hour animation
+    _hour = DateTime.now();
+    Timer(Duration(hours: 1)
+        - Duration(minutes: _hour.minute) 
+        - Duration(seconds: _hour.second) 
+        - Duration(milliseconds: _hour.millisecond) - _animationDuration,
+      () { 
+        hourAnimationController.forward();
+        hourAnimationController.addStatusListener((status) {
+          if (status == AnimationStatus.forward) {
+            setState(() {
+              _hour = DateTime.now();
             });
           }
         });
@@ -102,7 +137,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
         children: <Widget>[
           CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacesPainter()),
           CustomPaint(size: MediaQuery.of(context).size, painter: MinutePainter(dateTime: _minute, trackerPosition: _curvedAnimation.value)),
-          CustomPaint(size: MediaQuery.of(context).size, painter: HourPainter(dateTime: _minute, trackerPosition: _curvedAnimation.value)),
+          CustomPaint(size: MediaQuery.of(context).size, painter: HourPainter(dateTime: _hour, trackerPosition: hourAnimationController.value)),
           Positioned(left: 20, bottom: 20, child: weatherInfo),
         ]);
     return stack;

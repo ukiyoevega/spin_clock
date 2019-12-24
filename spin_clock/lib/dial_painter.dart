@@ -90,7 +90,7 @@ class DialPainter extends CustomPainter {
           fontFamily: 'Poppins', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
           fontSize: 10.0+105.0*(1-trackerPosition));
-        canvas.translate(-30*(1-trackerPosition), 120*(1-trackerPosition)); 
+        canvas.translate(-15*(1-trackerPosition), 90*(1-trackerPosition)); 
         textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
     } else if (i == 39) { // next up largest digit
       int currentGrayScale = grayScale-20*trackerPosition.toInt(); // 71->51
@@ -98,7 +98,7 @@ class DialPainter extends CustomPainter {
         fontFamily: 'Poppins', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
         fontSize: 10+105.0*trackerPosition);
-      canvas.translate(-30*trackerPosition, 120*trackerPosition); 
+      canvas.translate(-15*trackerPosition, 90*trackerPosition); 
       textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
     } else {
       final color = Color.fromRGBO(grayScale, grayScale, grayScale, 1);

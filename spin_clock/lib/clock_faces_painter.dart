@@ -13,18 +13,28 @@ class ClockFacesPainter extends CustomPainter {
     angle = 2 * pi / 60;
     radius = size.width/2;
     canvas.save();
-
+    _drawColon(canvas, size);
     canvas.translate(size.width*0.04, size.height*0.94); // left margin 0.04, bottom margin 0.06
     _drawClockFace(canvas: canvas, digitOffset: 3);
     canvas.translate(size.width*0.92, -size.height*0.88); // right margin 0.04, top margin 0.06
     _drawClockFace(hourMode: false, canvas: canvas, digitOffset: 0);
-
     canvas.restore();
   }
 
   @override
   bool shouldRepaint(ClockFacesPainter oldDelegate) {
     return false;
+  }
+
+  void _drawColon(Canvas canvas, Size size) {
+    canvas.save();
+    dialPaint.color = Color(0xFF333333);
+    canvas.translate(size.width/2, size.height/2);
+    canvas.translate(5, 20);
+    canvas.drawCircle(Offset(0, 0), 5, dialPaint);
+    canvas.translate(-10, -40);
+    canvas.drawCircle(Offset(0, 0), 5, dialPaint);
+    canvas.restore();
   }
 
   void _drawClockFace({bool hourMode = true, Canvas canvas, int digitOffset}) {

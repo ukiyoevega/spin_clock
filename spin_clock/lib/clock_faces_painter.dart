@@ -47,6 +47,9 @@ class ClockFacesPainter extends CustomPainter {
     dialPaint.color = Color(0xFF999999);
     dialPaint.strokeWidth = 0.5;
     for (var i = 0; i < 60; i++ ) {
+      int difference = hourMode ? (7-i).abs() : (38-i).abs();
+      int grayScale = 100+15*difference;
+      dialPaint.color = Color.fromRGBO(grayScale, grayScale, grayScale, 1);
       bool isCurrentHour = !hourMode && i==38;
       bool isCurrentMinute = hourMode && i==7;
       if (isCurrentHour || isCurrentMinute) {

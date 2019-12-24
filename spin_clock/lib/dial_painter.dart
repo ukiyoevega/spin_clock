@@ -3,9 +3,6 @@ import 'dart:math';
 
 class DialPainter extends CustomPainter {
   final double trackerPosition;
-  final Paint trackerPaint = new Paint()
-          ..color = Colors.black
-          ..style = PaintingStyle.fill;
   double radius;
   double angle;
   double borderWidth;
@@ -82,34 +79,38 @@ class DialPainter extends CustomPainter {
     var minuteText = _minuteText(i: i);
     canvas.save();
     canvas.translate(0.0, -radius+borderWidth+14);
-    if (i == 38) {
-      int grayScale = 51+102*trackerPosition.toInt(); // 51->153
+    // i  = 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
+    // dif = 8  7  6  5  4  3  2  1  0  1  2  3  4  5  6  7
+    final difference = (38-i).abs();
+    final grayScale = 51+20*difference;
+    if (i == 38) { // largest digit for current minute
+      int currentGrayScale = grayScale+20*trackerPosition.toInt(); // 51->71
       TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontFamily: 'Poppins', fontWeight: FontWeight.w400, fontSize:115.0);
-      final textStyle = TextStyle(color: Color.fromRGBO(grayScale, grayScale, grayScale, 1), 
+      final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
           fontFamily: 'Poppins', 
           fontWeight: trackerPosition == 1 ? FontWeight.w200 : FontWeight.w400, 
           fontSize: 10.0+105.0*(1-trackerPosition));
         canvas.translate(-30*(1-trackerPosition), 120*(1-trackerPosition)); 
         textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
-    } else if (i == 39) {
-      int grayScale = 153-102*trackerPosition.toInt(); // 51->153
-      final textStyle = TextStyle(color: Color.fromRGBO(grayScale, grayScale, grayScale, 1), 
+    } else if (i == 39) { // next up largest digit
+      int currentGrayScale = grayScale-20*trackerPosition.toInt(); // 71->51
+      final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
         fontFamily: 'Poppins', 
         fontWeight: FontWeight.w400, 
         fontSize: 10+105.0*trackerPosition);
       canvas.translate(-30*trackerPosition, 120*trackerPosition); 
       textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
     } else {
+      final color = Color.fromRGBO(grayScale, grayScale, grayScale, 1);
       textPainter.text= new TextSpan(
         text: '${minuteText.toString().padLeft(2, '0')}', 
-        style:  minuteTextStyle);
+        style:  minuteTextStyle.copyWith(color: color));
     }
     canvas.rotate(-angle*i+angle*trackerPosition);
     textPainter.layout();
     var painterOffset = new Offset(-(textPainter.width/2), -(textPainter.height/2));
     textPainter.paint(canvas, painterOffset);
     canvas.restore();
-    // debugPrint('now: ${DateTime.now()} ${minuteText.toString().padLeft(2, '0')} pos: ${trackerPosition*100.toInt()}');
   }
 
   void _drawHourDigit({Canvas canvas, int i, int digitOffset}) {

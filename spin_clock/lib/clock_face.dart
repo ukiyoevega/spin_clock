@@ -21,13 +21,14 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
 
   Timer _timer;
   AnimationController digitAnimationController; 
-
+  Animation curvedAnimation;
   @override
   void initState() {
     super.initState();
     widget.model.addListener(_updateModel);
     _updateModel();
     digitAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
+    curvedAnimation = CurvedAnimation(parent: digitAnimationController, curve: Curves.easeInOut);
     digitAnimationController.addStatusListener((status) {
       if (status != AnimationStatus.completed) { return; }
       final now = DateTime.now();
@@ -100,7 +101,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     Stack stack = Stack(
         children: <Widget>[
           CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacesPainter()),
-          CustomPaint(size: MediaQuery.of(context).size, painter: DialPainter(dateTime: _dateTime, trackerPosition: digitAnimationController.value)),
+          CustomPaint(size: MediaQuery.of(context).size, painter: DialPainter(dateTime: _dateTime, trackerPosition: curvedAnimation.value)),
           Positioned(left: 20, bottom: 20, child: weatherInfo),
         ]);
     return stack;

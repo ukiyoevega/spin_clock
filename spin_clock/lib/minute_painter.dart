@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class DialPainter extends CustomPainter {
+class MinutePainter extends CustomPainter {
   final double trackerPosition;
   double radius;
   double angle;
@@ -13,7 +13,7 @@ class DialPainter extends CustomPainter {
   final minuteTextStyle = TextStyle(fontFamily: 'Poppins', 
           fontWeight: FontWeight.w200, fontSize:10.0);
 
-  DialPainter({this.dateTime, this.trackerPosition});
+  MinutePainter({this.dateTime, this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -29,7 +29,7 @@ class DialPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(DialPainter oldDelegate) {
+  bool shouldRepaint(MinutePainter oldDelegate) {
     return true;
   }
   

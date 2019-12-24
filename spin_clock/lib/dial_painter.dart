@@ -88,7 +88,7 @@ class DialPainter extends CustomPainter {
       TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontFamily: 'Poppins', fontWeight: FontWeight.w400, fontSize:115.0);
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
           fontFamily: 'Poppins', 
-          fontWeight: trackerPosition == 1 ? FontWeight.w200 : FontWeight.w400, 
+          fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
           fontSize: 10.0+105.0*(1-trackerPosition));
         canvas.translate(-30*(1-trackerPosition), 120*(1-trackerPosition)); 
         textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
@@ -96,7 +96,7 @@ class DialPainter extends CustomPainter {
       int currentGrayScale = grayScale-20*trackerPosition.toInt(); // 71->51
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
         fontFamily: 'Poppins', 
-        fontWeight: FontWeight.w400, 
+        fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
         fontSize: 10+105.0*trackerPosition);
       canvas.translate(-30*trackerPosition, 120*trackerPosition); 
       textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);

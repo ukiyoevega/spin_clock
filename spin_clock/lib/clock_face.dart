@@ -16,7 +16,6 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _temperature = '';
   var _temperatureRange = '';
   var _condition = '';
-  var _location = '';
   DateTime _dateTime;
   final _animationDuration = Duration(milliseconds: 800);
 
@@ -82,7 +81,6 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
       _temperature = widget.model.temperatureString;
       _temperatureRange = '(${widget.model.low} - ${widget.model.highString})';
       _condition = widget.model.weatherString;
-      _location = widget.model.location;
     });
   }
 
@@ -94,8 +92,8 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(_temperature),
-          Text('$_temperatureRange, $_condition'),
-          Text(_location),
+          Text(_temperatureRange),
+          Text(_condition),
         ],
       ),
     );

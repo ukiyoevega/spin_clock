@@ -49,6 +49,10 @@ class HourPainter extends CustomPainter {
     int text = (i+digitOffset)~/5;
     if (text + hourOffset > 12) {
       return text + hourOffset - 12;
+    } else if (text + hourOffset < 0) {
+      return text + hourOffset + 12;
+    } else if (text + hourOffset == 0) {
+      return 12;
     } else {
       return text + hourOffset;
     }

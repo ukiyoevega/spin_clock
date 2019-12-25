@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'clock_face.dart';
+import 'theme.dart';
 
 class ClockFacesPainter extends CustomPainter {
   double radius;
@@ -20,9 +22,9 @@ class ClockFacesPainter extends CustomPainter {
     _drawClockFace(hourMode: false, canvas: canvas, digitOffset: 0);
     canvas.restore();
     canvas.translate(size.width*0.98, 0); 
-    dialPaint.color = Color(0xFFEEEBEB);
+    dialPaint.color = colors[ClockTheme.secondBorder];
     canvas.drawCircle(Offset(0, 0), 0.177*size.width+1, dialPaint);
-    dialPaint.color = Color(0xFFFDFDFD);
+    dialPaint.color = colors[ClockTheme.secondFace];
     canvas.drawCircle(Offset(0, 0), 0.177*size.width, dialPaint);
   }
 
@@ -33,7 +35,7 @@ class ClockFacesPainter extends CustomPainter {
 
   void _drawColon(Canvas canvas, Size size) {
     canvas.save();
-    dialPaint.color = Color(0xFF333333);
+    dialPaint.color = colors[ClockTheme.colon];
     canvas.translate(size.width/2, size.height/2);
     canvas.translate(5, 20);
     canvas.drawCircle(Offset(0, 0), 5, dialPaint);
@@ -50,20 +52,22 @@ class ClockFacesPainter extends CustomPainter {
               Rect.fromCircle(center: center, radius: radius+10))
           ..fillType = PathFillType.evenOdd,
         Paint() 
-        ..color= Colors.black.withAlpha(30)
+        ..color = colors[ClockTheme.shadow]
         ..maskFilter = MaskFilter.blur(BlurStyle.normal, 40)
     );
-    dialPaint.color = Color(0xFFFAFAFA);
+    dialPaint.color = colors[ClockTheme.border];
     canvas.drawCircle(center, radius, dialPaint);
-    dialPaint.color = Colors.white;
+    dialPaint.color = colors[ClockTheme.face];
     canvas.drawCircle(center, radius-borderWidth, dialPaint);
     
     // draw lines
-    dialPaint.color = Color(0xFF999999);
+    dialPaint.color = colors[ClockTheme.dialLine];
     dialPaint.strokeWidth = 0.5;
+    int gray = colors[ClockTheme.dialLineGrayScale].red;
+    bool islightMode = colors == lightMode;
     for (var i = 0; i < 60; i++ ) {
       int difference = hourMode ? (7-i).abs() : (38-i).abs();
-      int grayScale = 100+15*difference;
+      int grayScale = islightMode ? gray+15*difference: gray-20*difference;
       dialPaint.color = Color.fromRGBO(grayScale, grayScale, grayScale, 1);
       bool isCurrentHour = !hourMode && i==38;
       bool isCurrentMinute = hourMode && i==7;

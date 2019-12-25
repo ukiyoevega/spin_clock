@@ -10,11 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClockCustomizer(
         (ClockModel model) {
-          var container = Container(
-          color: Color(0xFFECECEC),
-          child: ClipRect(child: ClockFace(model: model))
-          );
-          return container;
+          return ClockFace(model: model);
       }
     );
   }

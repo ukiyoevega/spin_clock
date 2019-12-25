@@ -2,10 +2,12 @@ import 'hour_painter.dart';
 import 'minute_painter.dart';
 import 'second_painter.dart';
 import 'clock_faces_painter.dart';
+import 'theme.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 
+var colors = lightMode;
 class ClockFace extends StatefulWidget {
   final ClockModel model;
   const ClockFace({Key key, this.model}) : super(key: key);
@@ -145,8 +147,11 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    colors = Theme.of(context).brightness == Brightness.light
+        ? lightMode
+        : darkMode;
     final weatherInfo = DefaultTextStyle(
-      style: TextStyle(color: Color(0xFF333333), fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:12.0),
+      style: TextStyle(color: colors[ClockTheme.info], fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -165,6 +170,9 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
           CustomPaint(size: size, painter: SecondPainter(dateTime: _second, trackerPosition: _secondAnimationController.value)),
           Positioned(left: 20, bottom: 20, child: weatherInfo)
         ]);
-    return stack;
+    return Container(
+          color: colors[ClockTheme.background],
+          child: ClipRect(child: stack)
+          );
   }
 }

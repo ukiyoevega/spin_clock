@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'clock_face.dart';
+import 'theme.dart';
 
 class SecondPainter extends CustomPainter {
   double _radius;
@@ -42,21 +44,23 @@ class SecondPainter extends CustomPainter {
   void _drawSecondDigits({Canvas canvas}) {
     canvas.save();
     canvas.rotate(-_angle*trackerPosition);
+    // int gray = colors[ClockTheme.currentGrayScale].red;
+    bool isLightMode = colors == lightMode;
     for (var i = 0; i < 18; i++ ) {
-      _drawSecondDigit(canvas: canvas, i: i);
+      _drawSecondDigit(isLightMode, canvas: canvas, i: i, middleGray: 51);
       canvas.rotate(_angle);
     }
     canvas.restore();
   }
 
-  void _drawSecondDigit({Canvas canvas, int i}) {
+  void _drawSecondDigit(bool isLightMode, {Canvas canvas, int i, int middleGray}) {
     var secondText = _secondText(i: i);
     canvas.save();
     canvas.translate(0.0, -_radius+14);
     // i  =  9 10 11 12 13
     // dif = 2  1  0  1  2
     final difference = (11-i).abs();
-    final grayScale = 51+20*difference;
+    final grayScale = middleGray+20*difference;
     if (i == 11) { // largest digit for current second
       int currentGrayScale = grayScale+20*trackerPosition.toInt(); // 51->71
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 

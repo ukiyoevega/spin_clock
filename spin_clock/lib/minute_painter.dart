@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'clock_face.dart';
+import 'theme.dart';
 
 class MinutePainter extends CustomPainter {
   final double trackerPosition;
@@ -48,23 +50,25 @@ class MinutePainter extends CustomPainter {
   void _drawMinuteDigits({Canvas canvas}) {
     canvas.save();
     canvas.rotate(-_angle*trackerPosition);
+    int gray = colors[ClockTheme.currentGrayScale].red;
+    bool islightMode = colors == lightMode;
     for (var i = 0; i < 60; i++ ) {
-      _drawMinuteDigit(canvas: canvas, i: i);
+      _drawMinuteDigit(islightMode, canvas: canvas, i: i, middleGray: gray);
       canvas.rotate(_angle);
     }
     canvas.restore();
   }
 
-  void _drawMinuteDigit({Canvas canvas, int i}) {
+  void _drawMinuteDigit(bool isLightMode, {Canvas canvas, int i, int middleGray}) {
     var minuteText = _minuteText(i: i);
     canvas.save();
     canvas.translate(0.0, -_radius+_borderWidth+14);
     // i  = 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
     // dif = 8  7  6  5  4  3  2  1  0  1  2  3  4  5  6  7
     final difference = (38-i).abs();
-    final grayScale = 51+20*difference;
+    final grayScale = isLightMode ? middleGray+20*difference : middleGray-20*difference;
     if (i == 38) { // largest digit for current minute
-      int currentGrayScale = grayScale+20*trackerPosition.toInt(); // 51->71
+      int currentGrayScale = isLightMode ? grayScale+20*trackerPosition.toInt() : grayScale-20*trackerPosition.toInt(); // 51->71, 255->235
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
           fontFamily: 'Poppins', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
@@ -72,7 +76,7 @@ class MinutePainter extends CustomPainter {
         canvas.translate(-15*(1-trackerPosition), 90*(1-trackerPosition)); 
         _textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
     } else if (i == 39) { // next up largest digit
-      int currentGrayScale = grayScale-20*trackerPosition.toInt(); // 71->51
+      int currentGrayScale = isLightMode ? grayScale-20*trackerPosition.toInt() : grayScale+20*trackerPosition.toInt(); // 71->51, 235->255
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
         fontFamily: 'Poppins', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,

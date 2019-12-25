@@ -19,6 +19,11 @@ class ClockFacesPainter extends CustomPainter {
     canvas.translate(size.width*0.92, -size.height*0.88); // right margin 0.04, top margin 0.06
     _drawClockFace(hourMode: false, canvas: canvas, digitOffset: 0);
     canvas.restore();
+    canvas.translate(size.width*0.98, 0); 
+    dialPaint.color = Color(0xFFEEEBEB);
+    canvas.drawCircle(Offset(0, 0), 0.177*size.width+1, dialPaint);
+    dialPaint.color = Color(0xFFFDFDFD);
+    canvas.drawCircle(Offset(0, 0), 0.177*size.width, dialPaint);
   }
 
   @override

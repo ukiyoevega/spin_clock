@@ -1,5 +1,6 @@
 import 'hour_painter.dart';
 import 'minute_painter.dart';
+import 'second_painter.dart';
 import 'clock_faces_painter.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -19,10 +20,13 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _condition = '';
   DateTime _minute;
   DateTime _hour;
+  Timer _secondTimer;
+  DateTime _second;
   final _animationDuration = Duration(milliseconds: 800);
 
   AnimationController _minuteAnimationController; 
   AnimationController _hourAnimationController; 
+  AnimationController _secondAnimationController; 
   Animation _curvedAnimation;
   @override
   void initState() {
@@ -32,6 +36,11 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     _minuteAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
     _curvedAnimation = CurvedAnimation(parent: _minuteAnimationController, curve: Curves.easeInOut);
     _hourAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
+    _secondAnimationController = new AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _secondAnimationController.addListener(() {
+      setState(() {});
+    });
+    _updateTime();
     // add minute animation listener
     _minuteAnimationController.addStatusListener((status) {
       if (status != AnimationStatus.completed) { return; }
@@ -109,8 +118,21 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   void dispose() {
     _minuteAnimationController.dispose();
     _hourAnimationController.dispose();
+    _secondAnimationController.dispose();
+    _secondTimer.cancel();
     widget.model.removeListener(_updateModel);
     super.dispose();
+  }
+
+  void _updateTime() {
+    _secondAnimationController.forward(from: 0.0);
+    setState(() {
+      _second = DateTime.now();
+      _secondTimer = Timer(
+        Duration(seconds: 1) - Duration(milliseconds: _second.millisecond),
+        _updateTime,
+      );
+    });
   }
 
   void _updateModel() {
@@ -134,12 +156,14 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
         ],
       ),
     );
+    final size = MediaQuery.of(context).size;
     Stack stack = Stack(
         children: <Widget>[
-          CustomPaint(size: MediaQuery.of(context).size, painter: ClockFacesPainter()),
-          CustomPaint(size: MediaQuery.of(context).size, painter: MinutePainter(dateTime: _minute, trackerPosition: _curvedAnimation.value)),
-          CustomPaint(size: MediaQuery.of(context).size, painter: HourPainter(dateTime: _hour, trackerPosition: _hourAnimationController.value)),
-          Positioned(left: 20, bottom: 20, child: weatherInfo),
+          CustomPaint(size: size, painter: ClockFacesPainter()),
+          CustomPaint(size: size, painter: MinutePainter(dateTime: _minute, trackerPosition: _curvedAnimation.value)),
+          CustomPaint(size: size, painter: HourPainter(dateTime: _hour, trackerPosition: _hourAnimationController.value)),
+          CustomPaint(size: size, painter: SecondPainter(dateTime: _second, trackerPosition: _secondAnimationController.value)),
+          Positioned(left: 20, bottom: 20, child: weatherInfo)
         ]);
     return stack;
   }

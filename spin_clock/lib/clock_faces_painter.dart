@@ -14,9 +14,9 @@ class ClockFacesPainter extends CustomPainter {
     radius = size.width/2;
     canvas.save();
     _drawColon(canvas, size);
-    canvas.translate(size.width*0.04, size.height*0.94); // left margin 0.04, bottom margin 0.06
+    canvas.translate(size.width*0.03, size.height*0.9); // left margin 0.04, bottom margin 0.06 // 0.1
     _drawClockFace(canvas: canvas, digitOffset: 3);
-    canvas.translate(size.width*0.92, -size.height*0.88); // right margin 0.04, top margin 0.06
+    canvas.translate(size.width*0.94, -size.height*0.8); // right margin 0.04, top margin 0.06
     _drawClockFace(hourMode: false, canvas: canvas, digitOffset: 0);
     canvas.restore();
     canvas.translate(size.width*0.98, 0); 

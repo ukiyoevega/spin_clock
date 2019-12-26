@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'clock_face.dart';
 import 'theme.dart';
 
 class HourPainter extends CustomPainter {

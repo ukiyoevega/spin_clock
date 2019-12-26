@@ -1,13 +1,12 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'hour_painter.dart';
 import 'minute_painter.dart';
 import 'second_painter.dart';
 import 'clock_faces_painter.dart';
 import 'theme.dart';
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flutter_clock_helper/model.dart';
 
-var colors = lightMode;
 class ClockFace extends StatefulWidget {
   final ClockModel model;
   const ClockFace({Key key, this.model}) : super(key: key);

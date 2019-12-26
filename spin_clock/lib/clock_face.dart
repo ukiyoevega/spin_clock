@@ -25,59 +25,47 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   Timer _secondTimer;
   DateTime _second;
   final _animationDuration = Duration(milliseconds: 800);
+  final _secondAnimationDuration = Duration(milliseconds: 300);
 
   AnimationController _minuteAnimationController; 
   AnimationController _hourAnimationController; 
   AnimationController _secondAnimationController; 
-  Animation _curvedAnimation;
+  CurvedAnimation _curvedAnimation;
   @override
   void initState() {
     super.initState();
     widget.model.addListener(_updateModel);
     _updateModel();
-    _minuteAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
-    _curvedAnimation = CurvedAnimation(parent: _minuteAnimationController, curve: Curves.easeInOut);
-    _hourAnimationController = new AnimationController(vsync: this, duration: _animationDuration);
-    _secondAnimationController = new AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _secondAnimationController.addListener(() {
-      setState(() {});
-    });
+    _minuteAnimationController = new AnimationController(vsync: this, duration: _animationDuration)
+      ..addStatusListener((status) {
+        if (status != AnimationStatus.completed) { return; }
+        new Timer(_remainedTime(DateTime.now()), () {
+          _minuteAnimationController.forward(from: 0.0);
+        });
+      });
+    _curvedAnimation = CurvedAnimation(parent: _minuteAnimationController, curve: Curves.easeInOut)
+      ..addListener(() {
+        setState(() {}); 
+      });
+    _hourAnimationController = new AnimationController(vsync: this, duration: _animationDuration)
+      ..addListener(() {
+        setState(() {}); 
+      })
+      ..addStatusListener((status) {
+        if (status != AnimationStatus.completed) { return; }
+        final duration = _remainedTime(DateTime.now(), forHour: true);
+        new Timer(duration, () {
+          _hourAnimationController.forward(from: 0.0);
+        });
+      });
+    _secondAnimationController = new AnimationController(vsync: this, duration: _secondAnimationDuration)
+      ..addListener(() {
+        setState(() {}); 
+      });
     _updateTime();
-    // add minute animation listener
-    _minuteAnimationController.addStatusListener((status) {
-      if (status != AnimationStatus.completed) { return; }
-      final now = DateTime.now();
-      final duration = Duration(minutes: 1) 
-      - Duration(seconds: now.second) 
-      - Duration(milliseconds: now.millisecond) - _animationDuration;
-      new Timer(duration, () {
-        _minuteAnimationController.forward(from: 0.0);
-      });
-    });
-    _minuteAnimationController.addListener(() {
-      setState(() {});
-    });
-    // add hour animation listener
-    _hourAnimationController.addStatusListener((status) {
-      if (status != AnimationStatus.completed) { return; }
-      final now = DateTime.now();
-      final duration = Duration(hours: 1)
-      - Duration(minutes: now.minute) 
-      - Duration(seconds: now.second) 
-      - Duration(milliseconds: now.millisecond) - _animationDuration;
-      new Timer(duration, () {
-        _hourAnimationController.forward(from: 0.0);
-      });
-    });
-    _hourAnimationController.addListener(() {
-      setState(() {});
-    });
     // trigger initial minute animation
     _minute = DateTime.now();
-    Timer(Duration(minutes: 1) 
-        - Duration(seconds: _minute.second) 
-        - Duration(milliseconds: _minute.millisecond) - _animationDuration,
-      () { 
+    Timer(_remainedTime(_minute), () { 
         _minuteAnimationController.forward();
         _minuteAnimationController.addStatusListener((status) {
           if (status == AnimationStatus.forward) {
@@ -90,11 +78,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     );
     // trigger initial hour animation
     _hour = DateTime.now();
-    Timer(Duration(hours: 1)
-        - Duration(minutes: _hour.minute) 
-        - Duration(seconds: _hour.second) 
-        - Duration(milliseconds: _hour.millisecond) - _animationDuration,
-      () { 
+    Timer(_remainedTime(_hour, forHour: true), () { 
         _hourAnimationController.forward();
         _hourAnimationController.addStatusListener((status) {
           if (status == AnimationStatus.forward) {
@@ -105,6 +89,13 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
         });
       }
     );
+  }
+
+  Duration _remainedTime(DateTime time, {bool forHour = false}) {
+    var duration = forHour ? Duration(hours: 1) - Duration(minutes: time.minute) : Duration(minutes: 1);
+    return duration
+        - Duration(seconds: time.second) 
+        - Duration(milliseconds: time.millisecond) - _animationDuration;
   }
 
   @override

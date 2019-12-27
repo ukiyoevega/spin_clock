@@ -141,10 +141,10 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
     Stack stack = Stack(
         children: <Widget>[
-          CustomPaint(size: size, painter: ClockFacesPainter()),
-          CustomPaint(size: size, painter: MinutePainter(dateTime: _minute, trackerPosition: _curvedAnimation.value)),
-          CustomPaint(size: size, painter: HourPainter(dateTime: _hour, trackerPosition: _hourAnimationController.value)),
-          CustomPaint(size: size, painter: SecondPainter(dateTime: _second, trackerPosition: _secondAnimationController.value)),
+          RepaintBoundary(child: CustomPaint(size: size, painter: ClockFacesPainter())),
+          RepaintBoundary(child: CustomPaint(size: size, painter: HourPainter(dateTime: _hour, trackerPosition: _hourAnimationController.value))),
+          RepaintBoundary(child: CustomPaint(size: size, painter: MinutePainter(dateTime: _minute, trackerPosition: _curvedAnimation.value))),
+          RepaintBoundary(child: CustomPaint(size: size, painter: SecondPainter(dateTime: _second, trackerPosition: _secondAnimationController.value))),
           Positioned(left: 20, bottom: 20, child: weatherInfo)
         ]);
     return Container(

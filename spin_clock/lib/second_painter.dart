@@ -25,7 +25,7 @@ class SecondPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(SecondPainter oldDelegate) {
-    return true;
+    return trackerPosition != oldDelegate.trackerPosition;
   }
   
   int _secondText({int i}) { // 

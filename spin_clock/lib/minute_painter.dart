@@ -31,7 +31,7 @@ class MinutePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(MinutePainter oldDelegate) {
-    return true;
+    return oldDelegate.trackerPosition != trackerPosition; 
   }
   
   int _minuteText({int i}) {

@@ -29,7 +29,7 @@ class HourPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(HourPainter oldDelegate) {
-    return true;
+    return oldDelegate.trackerPosition != trackerPosition;
   }
   
   void _drawMarker({Canvas canvas}) {

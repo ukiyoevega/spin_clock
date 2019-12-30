@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'theme.dart';
+import 'package:spin_clock/theme.dart';
 
 class SecondPainter extends CustomPainter {
   double _radius;

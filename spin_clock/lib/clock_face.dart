@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'dial_paint.dart';
-import 'clock_faces_painter.dart';
+import 'painters/clock_faces_painter.dart';
 import 'theme.dart';
 
 class ClockFace extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spin_clock/hour_painter.dart';
-import 'package:spin_clock/second_painter.dart';
-import 'package:spin_clock/minute_painter.dart';
+import 'painters/hour_painter.dart';
+import 'painters/minute_painter.dart';
+import 'painters/second_painter.dart';
 import 'dart:async';
 import 'theme.dart';
 enum DialType {

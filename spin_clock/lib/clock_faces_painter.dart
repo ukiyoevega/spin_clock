@@ -6,7 +6,10 @@ class ClockFacesPainter extends CustomPainter {
   double radius;
   double angle;
   double borderWidth;
+  final Map<ClockTheme, Color> colors;
   final Paint dialPaint = new Paint();
+
+  ClockFacesPainter(this.colors);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -29,7 +32,7 @@ class ClockFacesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(ClockFacesPainter oldDelegate) {
-    return false;
+    return oldDelegate.colors != colors; 
   }
 
   void _drawColon(Canvas canvas, Size size) {

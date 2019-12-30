@@ -3,15 +3,16 @@ import 'package:spin_clock/hour_painter.dart';
 import 'package:spin_clock/second_painter.dart';
 import 'package:spin_clock/minute_painter.dart';
 import 'dart:async';
-
+import 'theme.dart';
 enum DialType {
   second, minute, hour
 }
 
 class DialPaint extends StatefulWidget {  
   final DialType type;
+  final Map<ClockTheme, Color> colors;
   final Duration animationDuration;
-  DialPaint({this.type, this.animationDuration});
+  DialPaint(this.colors, this.type, {this.animationDuration});
   @override
   State createState() => _DialPaintState();
 }
@@ -60,13 +61,13 @@ class _DialPaintState extends State<DialPaint> with TickerProviderStateMixin {
     CustomPainter painter;
     switch (widget.type) {
       case DialType.second:
-      painter = SecondPainter(dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
+      painter = SecondPainter(widget.colors, dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
       break;
       case DialType.minute: 
-      painter = MinutePainter(dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
+      painter = MinutePainter(widget.colors, dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
       break;
       case DialType.hour: 
-      painter = HourPainter(dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
+      painter = HourPainter(widget.colors, dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
       break;
     }
     return RepaintBoundary(child: CustomPaint(size: size, painter: painter));

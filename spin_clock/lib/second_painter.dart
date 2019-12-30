@@ -5,6 +5,7 @@ import 'theme.dart';
 class SecondPainter extends CustomPainter {
   double _radius;
   double _angle;
+  final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
   final double trackerPosition;
   final TextPainter _textPainter = TextPainter(textAlign: TextAlign.center,
@@ -13,7 +14,7 @@ class SecondPainter extends CustomPainter {
   final _secondTextStyle = TextStyle(fontFamily: 'Poppins', 
           fontWeight: FontWeight.w200, fontSize:8.0);
 
-  SecondPainter({this.dateTime, this.trackerPosition});
+  SecondPainter(this.colors, {this.dateTime, this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -25,7 +26,7 @@ class SecondPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(SecondPainter oldDelegate) {
-    return trackerPosition != oldDelegate.trackerPosition;
+    return oldDelegate.colors != colors || oldDelegate.trackerPosition != trackerPosition; 
   }
   
   int _secondText({int i}) { // 

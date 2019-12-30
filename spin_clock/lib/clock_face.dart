@@ -46,7 +46,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    colors = Theme.of(context).brightness == Brightness.light
+    var colors = Theme.of(context).brightness == Brightness.light
         ? lightMode
         : darkMode;
     final weatherInfo = DefaultTextStyle(
@@ -63,10 +63,10 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
     Stack stack = Stack(
         children: <Widget>[
-          RepaintBoundary(child: CustomPaint(size: size, painter: ClockFacesPainter())),
-          DialPaint(type: DialType.hour, animationDuration: Duration(milliseconds: 600)),
-          DialPaint(type: DialType.minute, animationDuration: Duration(milliseconds: 600)),
-          DialPaint(type: DialType.second, animationDuration: Duration(milliseconds: 300)),
+          RepaintBoundary(child: CustomPaint(size: size, painter: ClockFacesPainter(colors))),
+          DialPaint(colors, DialType.hour, animationDuration: Duration(milliseconds: 600)),
+          DialPaint(colors, DialType.minute, animationDuration: Duration(milliseconds: 600)),
+          DialPaint(colors, DialType.second, animationDuration: Duration(milliseconds: 300)),
           Positioned(left: 20, bottom: 20, child: weatherInfo)
         ]);
     return Container(

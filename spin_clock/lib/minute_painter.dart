@@ -7,6 +7,7 @@ class MinutePainter extends CustomPainter {
   double _radius;
   double _angle;
   double _borderWidth;
+  final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
   final TextPainter _textPainter = TextPainter(textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
@@ -14,7 +15,7 @@ class MinutePainter extends CustomPainter {
   final _minuteTextStyle = TextStyle(fontFamily: 'Poppins', 
           fontWeight: FontWeight.w200, fontSize:10.0);
 
-  MinutePainter({this.dateTime, this.trackerPosition});
+  MinutePainter(this.colors, {this.dateTime, this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -31,7 +32,7 @@ class MinutePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(MinutePainter oldDelegate) {
-    return oldDelegate.trackerPosition != trackerPosition; 
+    return oldDelegate.colors != colors || oldDelegate.trackerPosition != trackerPosition; 
   }
   
   int _minuteText({int i}) {

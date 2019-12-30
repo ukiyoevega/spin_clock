@@ -6,13 +6,14 @@ class HourPainter extends CustomPainter {
   double _radius;
   double _angle;
   double _borderWidth;
+  final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
   final double trackerPosition;
   final TextPainter _textPainter = TextPainter(textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
         );
 
-  HourPainter({this.dateTime, this.trackerPosition});
+  HourPainter(this.colors, {this.dateTime, this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -29,7 +30,7 @@ class HourPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(HourPainter oldDelegate) {
-    return oldDelegate.trackerPosition != trackerPosition;
+    return oldDelegate.colors != colors || oldDelegate.trackerPosition != trackerPosition; 
   }
   
   void _drawMarker({Canvas canvas}) {
@@ -87,7 +88,7 @@ class HourPainter extends CustomPainter {
       _textPainter.text= TextSpan(text: '$hourText', style: textStyle);
     } else {
       _textPainter.text= new TextSpan(text: '$hourText',
-        style: TextStyle(color: colors[ClockTheme.currentGrayScale], 
+        style: TextStyle(color: colors[ClockTheme.hourGrayScale], 
           fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:13.0));
     }
     canvas.rotate(-_angle*i+_angle*5*trackerPosition);

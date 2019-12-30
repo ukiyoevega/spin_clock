@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-var colors = lightMode;
 enum ClockTheme {
   background,
   shadow,

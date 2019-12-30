@@ -29,7 +29,7 @@ class SecondPainter extends CustomPainter {
   }
   
   int _secondText({int i}) { // 
-    int secondOffset = dateTime.second - 12;
+    int secondOffset = dateTime.second - 11;
     var x = secondOffset + i;
     if (x < 0) {
       return x + 60;

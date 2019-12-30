@@ -1,9 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
-import 'hour_painter.dart';
-import 'minute_painter.dart';
-import 'second_painter.dart';
+import 'dial_paint.dart';
 import 'clock_faces_painter.dart';
 import 'theme.dart';
 
@@ -17,71 +14,11 @@ class ClockFace extends StatefulWidget {
 
 class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _temperature, _condition, _temperatureRange = '';
-  DateTime _minute, _hour, _second;
-  Timer _secondTimer;
-  final _animationDuration = Duration(milliseconds: 800);
-  final _secondAnimationDuration = Duration(milliseconds: 300);
-
-  AnimationController _minuteAnimationController, _hourAnimationController, _secondAnimationController;
-  CurvedAnimation _curvedAnimation;
   @override
   void initState() {
     super.initState();
     widget.model.addListener(_updateModel);
     _updateModel();
-    _minuteAnimationController = new AnimationController(vsync: this, duration: _animationDuration)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.forward) {
-          setState(() {
-            _minute = DateTime.now();
-          });
-        }
-        if (status != AnimationStatus.completed) { return; }
-        new Timer(_remainedTime(DateTime.now()), () {
-          _minuteAnimationController.forward(from: 0.0);
-        });
-      });
-    _curvedAnimation = CurvedAnimation(parent: _minuteAnimationController, curve: Curves.easeInOut)
-      ..addListener(() {
-        setState(() {}); 
-      });
-    _hourAnimationController = new AnimationController(vsync: this, duration: _animationDuration)
-      ..addListener(() {
-        setState(() {}); 
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.forward) {
-          setState(() {
-            _hour = DateTime.now();
-          });
-        }
-        if (status != AnimationStatus.completed) { return; }
-        final duration = _remainedTime(DateTime.now(), forHour: true);
-        new Timer(duration, () {
-          _hourAnimationController.forward(from: 0.0);
-        });
-      });
-    _secondAnimationController = new AnimationController(vsync: this, duration: _secondAnimationDuration)
-      ..addListener(() {
-        setState(() {}); 
-      });
-    _updateTime();
-    // trigger initial hour & minute animation
-    _minute = DateTime.now();
-    Timer(_remainedTime(_minute), () { 
-        _minuteAnimationController.forward();
-    });
-    _hour = DateTime.now();
-    Timer(_remainedTime(_hour, forHour: true), () { 
-        _hourAnimationController.forward();
-    });
-  }
-
-  Duration _remainedTime(DateTime time, {bool forHour = false}) {
-    var duration = forHour ? Duration(hours: 1) - Duration(minutes: time.minute) : Duration(minutes: 1);
-    return duration
-        - Duration(seconds: time.second) 
-        - Duration(milliseconds: time.millisecond) - _animationDuration;
   }
 
   @override
@@ -95,23 +32,8 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _minuteAnimationController.dispose();
-    _hourAnimationController.dispose();
-    _secondAnimationController.dispose();
-    _secondTimer.cancel();
     widget.model.removeListener(_updateModel);
     super.dispose();
-  }
-
-  void _updateTime() {
-    _secondAnimationController.forward(from: 0.0);
-    setState(() {
-      _second = DateTime.now();
-      _secondTimer = Timer(
-        Duration(seconds: 1) - Duration(milliseconds: _second.millisecond),
-        _updateTime,
-      );
-    });
   }
 
   void _updateModel() {
@@ -142,9 +64,9 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     Stack stack = Stack(
         children: <Widget>[
           RepaintBoundary(child: CustomPaint(size: size, painter: ClockFacesPainter())),
-          RepaintBoundary(child: CustomPaint(size: size, painter: HourPainter(dateTime: _hour, trackerPosition: _hourAnimationController.value))),
-          RepaintBoundary(child: CustomPaint(size: size, painter: MinutePainter(dateTime: _minute, trackerPosition: _curvedAnimation.value))),
-          RepaintBoundary(child: CustomPaint(size: size, painter: SecondPainter(dateTime: _second, trackerPosition: _secondAnimationController.value))),
+          DialPaint(type: DialType.hour, animationDuration: Duration(milliseconds: 600)),
+          DialPaint(type: DialType.minute, animationDuration: Duration(milliseconds: 600)),
+          DialPaint(type: DialType.second, animationDuration: Duration(milliseconds: 300)),
           Positioned(left: 20, bottom: 20, child: weatherInfo)
         ]);
     return Container(

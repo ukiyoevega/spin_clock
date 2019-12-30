@@ -6,6 +6,7 @@ class HourPainter extends CustomPainter {
   double _radius;
   double _angle;
   double _borderWidth;
+  double _height;
   final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
   final double trackerPosition;
@@ -17,9 +18,11 @@ class HourPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    debugPrint('${size.width} ${size.height}');
     _borderWidth = size.width*0.02; 
     _angle = 2 * pi / 60;
     _radius = size.width/2;
+    _height = size.height;
     canvas.save();
     canvas.translate(size.width*0.03, size.height*0.9); // left margin 0.04, bottom margin 0.06
     _drawHourDigits(canvas: canvas, digitOffset: 3);
@@ -35,8 +38,8 @@ class HourPainter extends CustomPainter {
   
   void _drawMarker({Canvas canvas}) {
     canvas.translate(-_radius*1/15, _radius*5/9);
-    final style = TextStyle(color: colors[ClockTheme.currentGrayScale], fontFamily: 'Poppins', fontSize: 40, fontWeight: FontWeight.w200);
-    _textPainter.text= TextSpan(text: dateTime.hour >= 12 ? " PM" : " AM", style: style);
+    final style = TextStyle(color: colors[ClockTheme.currentGrayScale], fontFamily: 'Poppins', fontSize: _height/8.25, fontWeight: FontWeight.w200);
+    _textPainter.text= TextSpan(text: dateTime.hour >= 12 ? "PM" : "AM", style: style);
     _textPainter.layout();
     var painterOffset = new Offset(-(_textPainter.width/2), -(_textPainter.height/2));
     _textPainter.paint(canvas, painterOffset);
@@ -68,6 +71,7 @@ class HourPainter extends CustomPainter {
   void _drawHourDigit({Canvas canvas, int i, int digitOffset}) {
     if ((i+digitOffset)%5!=0) { return; }
     int hourText = _hourText(i: i, digitOffset: digitOffset);
+    int fontSize = _height~/3 - 13;
     canvas.save();
     canvas.translate(0.0, -_radius+_borderWidth+14);
     if (i == 7) { // largest digit for current hour
@@ -75,16 +79,16 @@ class HourPainter extends CustomPainter {
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
           fontFamily: 'Poppins', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
-          fontSize: 13.0+102.0*(1-trackerPosition));
-      canvas.translate(10*(1-trackerPosition), 60*(1-trackerPosition)); 
+          fontSize: 13.0+fontSize*(1-trackerPosition));
+      canvas.translate(_height/33*(1-trackerPosition), _height/5.5*(1-trackerPosition)); 
       _textPainter.text= TextSpan(text: '$hourText', style: textStyle);
     } else if (i == 12) { // next up largest digit
       int currentGrayScale = colors[ClockTheme.hourGrayScale].red-102*trackerPosition.toInt(); // 153->51
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
         fontFamily: 'Poppins', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
-        fontSize: 13+102.0*trackerPosition);
-      canvas.translate(10*trackerPosition, 60*trackerPosition); 
+        fontSize: 13+(fontSize)*trackerPosition);
+      canvas.translate(_height/33*trackerPosition, _height/5.5*trackerPosition); 
       _textPainter.text= TextSpan(text: '$hourText', style: textStyle);
     } else {
       _textPainter.text= new TextSpan(text: '$hourText',

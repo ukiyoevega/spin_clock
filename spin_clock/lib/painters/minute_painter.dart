@@ -6,6 +6,7 @@ class MinutePainter extends CustomPainter {
   final double trackerPosition;
   double _radius;
   double _angle;
+  double _height;
   double _borderWidth;
   final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
@@ -22,6 +23,7 @@ class MinutePainter extends CustomPainter {
     _borderWidth = size.width*0.02; 
     _angle = 2 * pi / 60;
     _radius = size.width/2;
+    _height = size.height;
     canvas.save();
 
     canvas.translate(size.width*0.03, size.height*0.9); // left margin 0.04, bottom margin 0.06
@@ -61,6 +63,7 @@ class MinutePainter extends CustomPainter {
 
   void _drawMinuteDigit(bool isLightMode, {Canvas canvas, int i, int middleGray}) {
     var minuteText = _minuteText(i: i);
+    int fontSize = _height~/3 - 10;
     canvas.save();
     canvas.translate(0.0, -_radius+_borderWidth+14);
     // i  = 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
@@ -72,16 +75,16 @@ class MinutePainter extends CustomPainter {
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
           fontFamily: 'Poppins', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
-          fontSize: 10.0+105.0*(1-trackerPosition));
-        canvas.translate(-15*(1-trackerPosition), 90*(1-trackerPosition)); 
+          fontSize: 10.0+fontSize*(1-trackerPosition));
+        canvas.translate(-_height/22*(1-trackerPosition), _height/4*(1-trackerPosition)); 
         _textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
     } else if (i == 39) { // next up largest digit
       int currentGrayScale = isLightMode ? grayScale-20*trackerPosition.toInt() : grayScale+20*trackerPosition.toInt(); // 71->51, 235->255
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
         fontFamily: 'Poppins', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
-        fontSize: 10+105.0*trackerPosition);
-      canvas.translate(-15*trackerPosition, 90*trackerPosition); 
+        fontSize: 10+fontSize*trackerPosition);
+      canvas.translate(-_height/22*trackerPosition, _height/4*trackerPosition); 
       _textPainter.text= TextSpan(text: '${minuteText.toString().padLeft(2, '0')}', style: textStyle);
     } else {
       final color = Color.fromRGBO(grayScale, grayScale, grayScale, 1);

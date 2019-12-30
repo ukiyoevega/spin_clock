@@ -40,9 +40,9 @@ class ClockFacesPainter extends CustomPainter {
     dialPaint.color = colors[ClockTheme.colon];
     canvas.translate(size.width/2, size.height/2);
     canvas.translate(5, 20);
-    canvas.drawCircle(Offset(0, 0), 5, dialPaint);
+    canvas.drawCircle(Offset(0, 0), size.height/66, dialPaint);
     canvas.translate(-10, -40);
-    canvas.drawCircle(Offset(0, 0), 5, dialPaint);
+    canvas.drawCircle(Offset(0, 0), size.height/66, dialPaint);
     canvas.restore();
   }
 

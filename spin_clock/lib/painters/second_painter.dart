@@ -11,7 +11,7 @@ class SecondPainter extends CustomPainter {
   final TextPainter _textPainter = TextPainter(textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
         );
-  final _secondTextStyle = TextStyle(fontFamily: 'Poppins', 
+  final _secondTextStyle = TextStyle(fontFamily: 'PoppinsRegular', 
           fontWeight: FontWeight.w200, fontSize:8.0);
 
   SecondPainter(this.colors, {this.dateTime, this.trackerPosition});
@@ -64,7 +64,7 @@ class SecondPainter extends CustomPainter {
     if (i == 11) { // largest digit for current second
       int currentGrayScale = grayScale+20*trackerPosition.toInt(); // 51->71
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
-          fontFamily: 'Poppins', 
+          fontFamily: 'PoppinsMedium', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
           fontSize: 8+15.0*(1-trackerPosition));
         canvas.translate(0, 9*(1-trackerPosition)); 
@@ -72,7 +72,7 @@ class SecondPainter extends CustomPainter {
     } else if (i == 12) { // next up largest digit
       int currentGrayScale = grayScale-20*trackerPosition.toInt(); // 71->51
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
-        fontFamily: 'Poppins', 
+        fontFamily: 'PoppinsMedium', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
         fontSize: 8+15.0*trackerPosition);
       canvas.translate(0, 9*trackerPosition); 

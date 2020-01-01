@@ -13,7 +13,7 @@ class MinutePainter extends CustomPainter {
   final TextPainter _textPainter = TextPainter(textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
         );
-  final _minuteTextStyle = TextStyle(fontFamily: 'Poppins', 
+  final _minuteTextStyle = TextStyle(fontFamily: 'PoppinsRegular', 
           fontWeight: FontWeight.w200, fontSize:10.0);
 
   MinutePainter(this.colors, {this.dateTime, this.trackerPosition});
@@ -73,7 +73,7 @@ class MinutePainter extends CustomPainter {
     if (i == 38) { // largest digit for current minute
       int currentGrayScale = isLightMode ? grayScale+20*trackerPosition.toInt() : grayScale-20*trackerPosition.toInt(); // 51->71, 255->235
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
-          fontFamily: 'Poppins', 
+          fontFamily: 'PoppinsMedium', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
           fontSize: 10.0+fontSize*(1-trackerPosition));
         canvas.translate(-_height/22*(1-trackerPosition), _height/4*(1-trackerPosition)); 
@@ -81,7 +81,7 @@ class MinutePainter extends CustomPainter {
     } else if (i == 39) { // next up largest digit
       int currentGrayScale = isLightMode ? grayScale-20*trackerPosition.toInt() : grayScale+20*trackerPosition.toInt(); // 71->51, 235->255
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
-        fontFamily: 'Poppins', 
+        fontFamily: 'PoppinsMedium', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
         fontSize: 10+fontSize*trackerPosition);
       canvas.translate(-_height/22*trackerPosition, _height/4*trackerPosition); 

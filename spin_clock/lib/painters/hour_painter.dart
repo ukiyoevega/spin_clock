@@ -38,7 +38,7 @@ class HourPainter extends CustomPainter {
   
   void _drawMarker({Canvas canvas}) {
     canvas.translate(-_radius*1/15, _radius*5/9);
-    final style = TextStyle(color: colors[ClockTheme.currentGrayScale], fontFamily: 'Poppins', fontSize: _height/8.25, fontWeight: FontWeight.w200);
+    final style = TextStyle(color: colors[ClockTheme.currentGrayScale], fontFamily: 'PoppinsMedium', fontSize: _height/8.25, fontWeight: FontWeight.w200);
     _textPainter.text= TextSpan(text: dateTime.hour >= 12 ? "PM" : "AM", style: style);
     _textPainter.layout();
     var painterOffset = new Offset(-(_textPainter.width/2), -(_textPainter.height/2));
@@ -77,7 +77,7 @@ class HourPainter extends CustomPainter {
     if (i == 7) { // largest digit for current hour
       int currentGrayScale = colors[ClockTheme.currentGrayScale].red+102*trackerPosition.toInt(); // 51->153
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
-          fontFamily: 'Poppins', 
+          fontFamily: 'PoppinsMedium', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
           fontSize: 13.0+fontSize*(1-trackerPosition));
       canvas.translate(_height/33*(1-trackerPosition), _height/5.5*(1-trackerPosition)); 
@@ -85,7 +85,7 @@ class HourPainter extends CustomPainter {
     } else if (i == 12) { // next up largest digit
       int currentGrayScale = colors[ClockTheme.hourGrayScale].red-102*trackerPosition.toInt(); // 153->51
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
-        fontFamily: 'Poppins', 
+        fontFamily: 'PoppinsMedium', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
         fontSize: 13+(fontSize)*trackerPosition);
       canvas.translate(_height/33*trackerPosition, _height/5.5*trackerPosition); 
@@ -93,7 +93,7 @@ class HourPainter extends CustomPainter {
     } else {
       _textPainter.text= new TextSpan(text: '$hourText',
         style: TextStyle(color: colors[ClockTheme.hourGrayScale], 
-          fontFamily: 'Poppins', fontWeight: FontWeight.w200, fontSize:13.0));
+          fontFamily: 'PoppinsRegular', fontWeight: FontWeight.w200, fontSize:13.0));
     }
     canvas.rotate(-_angle*i+_angle*5*trackerPosition);
     _textPainter.layout();

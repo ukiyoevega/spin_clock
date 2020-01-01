@@ -41,15 +41,21 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+   - images/cloudy.png
+   - images/foggy.png
+   - images/foggy_dark.png
+   - images/rainy.png
+   - images/snowy.png
+   - images/sunny.png
+   - images/thunderstorm.png
+   - images/windy.png
+   - images/windy_dark.png
 
   fonts:
-    - family: Poppins
+    - family: PoppinsRegular
       fonts:
-        - asset: fonts/Poppins-Regular.ttf
-          weight: 200
-        - asset: fonts/Poppins-Medium.ttf
-          weight: 400
+        - asset: fonts/PoppinsRegular.ttf
+    - family: PoppinsMedium
+      fonts:
+        - asset: fonts/PoppinsMedium.ttf

@@ -13,6 +13,7 @@ enum ClockTheme {
   secondBorder,
   colon,
   info,
+  blue,
 }
 
 final lightMode = {
@@ -27,7 +28,8 @@ final lightMode = {
   ClockTheme.secondFace: Color(0xFFFDFDFD),
   ClockTheme.secondBorder: Color(0xFFEEEBEB),
   ClockTheme.colon: Color(0xFF333333),
-  ClockTheme.info: Color(0xFF333333),
+  ClockTheme.info: Color(0xFF666666),
+  ClockTheme.blue: Color(0xFF000000),
 };
 
 final darkMode = {
@@ -42,5 +44,6 @@ final darkMode = {
   ClockTheme.secondFace: Color(0xFFFDFDFD),
   ClockTheme.secondBorder: Color(0xFFEEEBEB),
   ClockTheme.colon: Color(0xFFD6D6D6),
-  ClockTheme.info: Color(0xFFECECEC),
+  ClockTheme.info: Color(0xFFCCCCCC),
+  ClockTheme.blue: Color(0xFFFFFFFF),
 };

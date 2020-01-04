@@ -8,10 +8,8 @@ void main() => runApp(new MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ClockCustomizer(
-        (ClockModel model) {
-          return ClockFace(model: model);
-      }
-    );
+    return ClockCustomizer((ClockModel model) {
+      return ClockFace(model: model);
+    });
   }
 }

@@ -4,11 +4,10 @@ import 'painters/minute_painter.dart';
 import 'painters/second_painter.dart';
 import 'dart:async';
 import 'theme.dart';
-enum DialType {
-  second, minute, hour
-}
 
-class DialPaint extends StatefulWidget {  
+enum DialType { second, minute, hour }
+
+class DialPaint extends StatefulWidget {
   final DialType type;
   final Map<ClockTheme, Color> colors;
   final Duration animationDuration;
@@ -25,27 +24,29 @@ class _DialPaintState extends State<DialPaint> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _animationController = new AnimationController(vsync: this, duration: widget.animationDuration)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          new Timer(_remainedTime(DateTime.now()), () {
-            _animationController.forward(from: 0.0);
+    _animationController =
+        new AnimationController(vsync: this, duration: widget.animationDuration)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              new Timer(_remainedTime(DateTime.now()), () {
+                _animationController.forward(from: 0.0);
+              });
+            }
+            if (status == AnimationStatus.forward) {
+              setState(() {
+                _dateTime = DateTime.now();
+              });
+            }
           });
-        }
-        if (status == AnimationStatus.forward) {
-          setState(() {
-            _dateTime = DateTime.now();
+    _curvedAnimation =
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut)
+          ..addListener(() {
+            setState(() {});
           });
-        }
-      });
-    _curvedAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut)
-      ..addListener(() {
-        setState(() {}); 
-      });
     // trigger initial animation
     _dateTime = DateTime.now();
-    Timer(_remainedTime(_dateTime), () { 
-        _animationController.forward();
+    Timer(_remainedTime(_dateTime), () {
+      _animationController.forward();
     });
   }
 
@@ -61,14 +62,17 @@ class _DialPaintState extends State<DialPaint> with TickerProviderStateMixin {
     CustomPainter painter;
     switch (widget.type) {
       case DialType.second:
-      painter = SecondPainter(widget.colors, dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
-      break;
-      case DialType.minute: 
-      painter = MinutePainter(widget.colors, dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
-      break;
-      case DialType.hour: 
-      painter = HourPainter(widget.colors, dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
-      break;
+        painter = SecondPainter(widget.colors,
+            dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
+        break;
+      case DialType.minute:
+        painter = MinutePainter(widget.colors,
+            dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
+        break;
+      case DialType.hour:
+        painter = HourPainter(widget.colors,
+            dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
+        break;
     }
     return RepaintBoundary(child: CustomPaint(size: size, painter: painter));
   }
@@ -76,26 +80,29 @@ class _DialPaintState extends State<DialPaint> with TickerProviderStateMixin {
   Duration _remainedTime(DateTime time) {
     Duration duration = Duration(milliseconds: 0);
     switch (widget.type) {
-      case DialType.second: 
-      // minus animation duration might swipe to next second
-      // 00:50:01:600 + 300 -> 900
-      // 00:50:01:900 + 300 -> 02:200
-      if (time.millisecond + widget.animationDuration.inMilliseconds < 1000) {
-        return Duration(seconds: 1) - Duration(milliseconds: time.millisecond) - Duration(microseconds: time.microsecond) - widget.animationDuration;
-      } else {
-        return duration;
-      }
-      break;
-      case DialType.minute: 
-      duration = Duration(minutes: 1);
-      break;
-      case DialType.hour: 
-      duration = Duration(hours: 1) - Duration(minutes: time.minute);
-      break;
+      case DialType.second:
+        // minus animation duration might swipe to next second
+        // 00:50:01:600 + 300 -> 900
+        // 00:50:01:900 + 300 -> 02:200
+        if (time.millisecond + widget.animationDuration.inMilliseconds < 1000) {
+          return Duration(seconds: 1) -
+              Duration(milliseconds: time.millisecond) -
+              Duration(microseconds: time.microsecond) -
+              widget.animationDuration;
+        } else {
+          return duration;
+        }
+        break;
+      case DialType.minute:
+        duration = Duration(minutes: 1);
+        break;
+      case DialType.hour:
+        duration = Duration(hours: 1) - Duration(minutes: time.minute);
+        break;
     }
-    return duration 
-      - Duration(seconds: time.second) 
-      - Duration(milliseconds: time.millisecond) 
-      - widget.animationDuration;
+    return duration -
+        Duration(seconds: time.second) -
+        Duration(milliseconds: time.millisecond) -
+        widget.animationDuration;
   }
 }

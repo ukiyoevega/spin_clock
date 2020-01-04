@@ -44,10 +44,10 @@ class SecondPainter extends CustomPainter {
   void _drawSecondDigits({Canvas canvas}) {
     canvas.save();
     canvas.rotate(-_angle*trackerPosition);
-    // int gray = colors[ClockTheme.currentGrayScale].red;
+    int gray = colors[ClockTheme.currentGrayScale].red;
     bool isLightMode = colors == lightMode;
     for (var i = 0; i < 18; i++ ) {
-      _drawSecondDigit(isLightMode, canvas: canvas, i: i, middleGray: 51);
+      _drawSecondDigit(isLightMode, canvas: canvas, i: i, middleGray: gray);
       canvas.rotate(_angle);
     }
     canvas.restore();
@@ -60,9 +60,9 @@ class SecondPainter extends CustomPainter {
     // i  =  9 10 11 12 13
     // dif = 2  1  0  1  2
     final difference = (11-i).abs();
-    final grayScale = middleGray+20*difference;
+    final grayScale = isLightMode ? middleGray+20*difference : middleGray-20*difference;
     if (i == 11) { // largest digit for current second
-      int currentGrayScale = grayScale+20*trackerPosition.toInt(); // 51->71
+      int currentGrayScale = isLightMode ? grayScale+20*trackerPosition.toInt() : grayScale-20*trackerPosition.toInt(); // 51->71, 255->235
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
           fontFamily: 'PoppinsMedium', 
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400, 
@@ -70,7 +70,7 @@ class SecondPainter extends CustomPainter {
         canvas.translate(0, 9*(1-trackerPosition)); 
         _textPainter.text= TextSpan(text:'${secondText.toString().padLeft(2, '0')}', style: textStyle);
     } else if (i == 12) { // next up largest digit
-      int currentGrayScale = grayScale-20*trackerPosition.toInt(); // 71->51
+      int currentGrayScale = isLightMode ? grayScale-20*trackerPosition.toInt() : grayScale+20*trackerPosition.toInt(); // 71->51, 235->255
       final textStyle = TextStyle(color: Color.fromRGBO(currentGrayScale, currentGrayScale, currentGrayScale, 1), 
         fontFamily: 'PoppinsMedium', 
         fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,

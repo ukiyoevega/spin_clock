@@ -19,7 +19,6 @@ class HourPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    debugPrint('${size.width} ${size.height}');
     _borderWidth = size.width * 0.02;
     _angle = 2 * pi / 60;
     _radius = size.width / 2;

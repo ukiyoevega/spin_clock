@@ -24,7 +24,7 @@ final lightMode = {
   ClockTheme.face: Colors.white,
   ClockTheme.border: Color(0xFFFAFAFA),
   ClockTheme.dialLine: Color(0xFF999999),
-  ClockTheme.dialLineGrayScale: Color.fromRGBO(100, 100, 100, 1), // 100,
+  ClockTheme.dialLineGrayScale: Color.fromRGBO(200, 200, 200, 1), // 200,
   ClockTheme.secondFace: Color(0xFFFDFDFD),
   ClockTheme.secondBorder: Color(0xFFEEEBEB),
   ClockTheme.colon: Color(0xFF333333),

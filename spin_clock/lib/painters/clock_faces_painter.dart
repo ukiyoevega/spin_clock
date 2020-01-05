@@ -64,22 +64,23 @@ class ClockFacesPainter extends CustomPainter {
 
     // draw lines
     dialPaint.color = colors[ClockTheme.dialLine];
-    dialPaint.strokeWidth = 0.5;
+    dialPaint.strokeWidth = 2;
+    dialPaint.strokeCap = StrokeCap.round;
     int gray = colors[ClockTheme.dialLineGrayScale].red;
     bool islightMode = colors == lightMode;
     for (var i = 0; i < 60; i++) {
       int difference = hourMode ? (7 - i).abs() : (38 - i).abs();
       int grayScale =
-          islightMode ? gray + 15 * difference : gray - 20 * difference;
+          islightMode ? gray + 5 * difference : gray - 5 * difference;
       dialPaint.color = Color.fromRGBO(grayScale, grayScale, grayScale, 1);
       bool isCurrentHour = !hourMode && i == 38;
       bool isCurrentMinute = hourMode && i == 7;
       if (isCurrentHour || isCurrentMinute) {
-        canvas.drawLine(new Offset(0.0, -radius),
+        canvas.drawLine(new Offset(0.0, -radius+1),
             new Offset(0.0, -radius + borderWidth + 16), dialPaint);
       } else {
-        canvas.drawLine(new Offset(0.0, -radius),
-            new Offset(0.0, -radius + borderWidth), dialPaint);
+        canvas.drawLine(new Offset(0.0, -radius+1),
+            new Offset(0.0, -radius + borderWidth-1), dialPaint);
       }
       canvas.rotate(angle);
     }

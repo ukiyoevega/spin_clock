@@ -77,8 +77,8 @@ class MinutePainter extends CustomPainter {
     // dif = 8  7  6  5  4  3  2  1  0  1  2  3  4  5  6  7
     final difference = (38 - i).abs();
     final grayScale = isLightMode
-        ? middleGray + 20 * difference
-        : middleGray - 20 * difference;
+        ? middleGray + 15 * difference
+        : middleGray - 15 * difference;
     if (i == 38) {
       // largest digit for current minute
       int currentGrayScale = isLightMode

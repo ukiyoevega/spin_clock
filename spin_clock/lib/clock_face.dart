@@ -111,8 +111,11 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     final weatherPack = Positioned(
         bottom: 10,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Image.asset('images/${_condition + (needDark ? '_dark' : '')}.png',
-              width: size.width * 0.125),
+          Padding(
+              padding: EdgeInsets.only(bottom: 7),
+              child: Image.asset(
+                  'images/${_condition + (needDark ? '_dark' : '')}.png',
+                  width: size.width * 0.125)),
           weatherInfo
         ]));
     Stack stack = Stack(children: <Widget>[

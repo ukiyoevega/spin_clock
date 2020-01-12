@@ -9,9 +9,11 @@ enum DialType { second, minute, hour }
 
 class DialPaint extends StatefulWidget {
   final DialType type;
+  bool is24HourFormat = true;
   final Map<ClockTheme, Color> colors;
   final Duration animationDuration;
-  DialPaint(this.colors, this.type, {this.animationDuration});
+  DialPaint(this.colors, this.type, this.animationDuration,
+      [this.is24HourFormat = true]);
   @override
   State createState() => _DialPaintState();
 }
@@ -70,7 +72,7 @@ class _DialPaintState extends State<DialPaint> with TickerProviderStateMixin {
             dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
         break;
       case DialType.hour:
-        painter = HourPainter(widget.colors,
+        painter = HourPainter(widget.is24HourFormat, widget.colors,
             dateTime: _dateTime, trackerPosition: _curvedAnimation.value);
         break;
     }

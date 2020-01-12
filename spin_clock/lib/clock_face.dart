@@ -15,6 +15,7 @@ class ClockFace extends StatefulWidget {
 class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
   var _condition, _temperatureRange = '';
   WeatherCondition _weather;
+  bool _is24HourFormat;
   @override
   void initState() {
     super.initState();
@@ -42,6 +43,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
       _condition = widget.model.weatherString;
       _temperatureRange = '${widget.model.low} - ${widget.model.highString}';
       _weather = widget.model.weatherCondition;
+      _is24HourFormat = widget.model.is24HourFormat;
     });
   }
 
@@ -116,12 +118,10 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
     Stack stack = Stack(children: <Widget>[
       RepaintBoundary(
           child: CustomPaint(size: size, painter: ClockFacesPainter(colors))),
-      DialPaint(colors, DialType.hour,
-          animationDuration: Duration(milliseconds: 600)),
-      DialPaint(colors, DialType.minute,
-          animationDuration: Duration(milliseconds: 600)),
-      DialPaint(colors, DialType.second,
-          animationDuration: Duration(milliseconds: 300)),
+      DialPaint(
+          colors, DialType.hour, Duration(milliseconds: 600), _is24HourFormat),
+      DialPaint(colors, DialType.minute, Duration(milliseconds: 600)),
+      DialPaint(colors, DialType.second, Duration(milliseconds: 300)),
       weatherPack,
     ]);
     return Container(

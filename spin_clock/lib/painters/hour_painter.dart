@@ -7,6 +7,7 @@ class HourPainter extends CustomPainter {
   double _angle;
   double _borderWidth;
   double _height;
+  bool is24HourFormat = true;
   final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
   final double trackerPosition;
@@ -15,7 +16,8 @@ class HourPainter extends CustomPainter {
     textDirection: TextDirection.ltr,
   );
 
-  HourPainter(this.colors, {this.dateTime, this.trackerPosition});
+  HourPainter(this.is24HourFormat, this.colors,
+      {this.dateTime, this.trackerPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -36,6 +38,7 @@ class HourPainter extends CustomPainter {
   @override
   bool shouldRepaint(HourPainter oldDelegate) {
     return oldDelegate.colors != colors ||
+        oldDelegate.is24HourFormat != is24HourFormat ||
         oldDelegate.trackerPosition != trackerPosition;
   }
 
@@ -64,6 +67,16 @@ class HourPainter extends CustomPainter {
   }
 
   int _hourText({int i, int digitOffset}) {
+    if (is24HourFormat) {
+      int text = (i + digitOffset) ~/ 5 + dateTime.hour - 2;
+      if (text <= 0) {
+        return text + 12;
+      } else if (text >= 24) {
+        return text - 24;
+      } else {
+        return text;
+      }
+    }
     // text offset by digitOffset on the clock
     final hour = (dateTime.hour > 12) ? (dateTime.hour - 12) : dateTime.hour;
     int hourOffset = hour - 2;
@@ -91,7 +104,9 @@ class HourPainter extends CustomPainter {
     if ((i + digitOffset) % 5 != 0) {
       return;
     }
-    int hourText = _hourText(i: i, digitOffset: digitOffset);
+    String hourText =
+        '${_hourText(i: i, digitOffset: digitOffset).toString().padLeft(2, '0')}';
+    debugPrint('$i $hourText');
     int fontSize = _height ~/ 3 - 13;
     canvas.save();
     canvas.translate(0.0, -_radius + _borderWidth + 14);
@@ -110,7 +125,7 @@ class HourPainter extends CustomPainter {
           fontSize: 13.0 + fontSize * (1 - trackerPosition));
       canvas.translate(_height / 33 * (1 - trackerPosition),
           _height / 5.5 * (1 - trackerPosition));
-      _textPainter.text = TextSpan(text: '$hourText', style: textStyle);
+      _textPainter.text = TextSpan(text: hourText, style: textStyle);
     } else if (i == 12) {
       // next up largest digit
       int currentGrayScale = hourGrayScale +
@@ -124,10 +139,10 @@ class HourPainter extends CustomPainter {
           fontSize: 13 + (fontSize) * trackerPosition);
       canvas.translate(
           _height / 33 * trackerPosition, _height / 5.5 * trackerPosition);
-      _textPainter.text = TextSpan(text: '$hourText', style: textStyle);
+      _textPainter.text = TextSpan(text: hourText, style: textStyle);
     } else {
       _textPainter.text = new TextSpan(
-          text: '$hourText',
+          text: hourText,
           style: TextStyle(
               color: colors[ClockTheme.hourGrayScale],
               fontFamily: 'PoppinsRegular',

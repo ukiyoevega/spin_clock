@@ -33,6 +33,8 @@ class HourPainter extends CustomPainter {
         -size.height * 0.8); // right margin 0.04, top margin 0.06
     _drawMarker(canvas: canvas);
     canvas.restore();
+    canvas.translate(15, size.height - 70.0);
+    _drawGreeting(canvas: canvas);
   }
 
   @override
@@ -40,6 +42,27 @@ class HourPainter extends CustomPainter {
     return oldDelegate.colors != colors ||
         oldDelegate.is24HourFormat != is24HourFormat ||
         oldDelegate.trackerPosition != trackerPosition;
+  }
+
+  void _drawGreeting({Canvas canvas, int hour}) {
+    List greetings = [
+      'Go to bed, you sleepy head', // 2
+      'Good morning', // 6
+      'How’s it going?', // 10
+      'Good afternoon', // 14
+      'Good evening', // 18
+      'Sweet dreams' // 22
+    ];
+    String greeting = greetings[(dateTime.hour - 2) ~/ 4];
+    _textPainter.text = TextSpan(
+        text: greeting,
+        style: TextStyle(
+            color: colors[ClockTheme.info],
+            fontFamily: 'PoppinsRegular',
+            fontWeight: FontWeight.w200,
+            fontSize: 14.0));
+    _textPainter.layout();
+    _textPainter.paint(canvas, Offset(0, 0));
   }
 
   void _drawMarker({Canvas canvas}) {
@@ -106,7 +129,6 @@ class HourPainter extends CustomPainter {
     }
     String hourText =
         '${_hourText(i: i, digitOffset: digitOffset).toString().padLeft(2, '0')}';
-    debugPrint('$i $hourText');
     int fontSize = _height ~/ 3 - 13;
     canvas.save();
     canvas.translate(0.0, -_radius + _borderWidth + 14);
@@ -123,8 +145,7 @@ class HourPainter extends CustomPainter {
           fontFamily: 'PoppinsMedium',
           fontWeight: trackerPosition > 0.5 ? FontWeight.w200 : FontWeight.w400,
           fontSize: 13.0 + fontSize * (1 - trackerPosition));
-      canvas.translate(_height / 33 * (1 - trackerPosition),
-          _height / 5.5 * (1 - trackerPosition));
+      canvas.translate(0, _height / 5 * (1 - trackerPosition));
       _textPainter.text = TextSpan(text: hourText, style: textStyle);
     } else if (i == 12) {
       // next up largest digit
@@ -137,8 +158,7 @@ class HourPainter extends CustomPainter {
           fontFamily: 'PoppinsMedium',
           fontWeight: trackerPosition > 0.5 ? FontWeight.w400 : FontWeight.w200,
           fontSize: 13 + (fontSize) * trackerPosition);
-      canvas.translate(
-          _height / 33 * trackerPosition, _height / 5.5 * trackerPosition);
+      canvas.translate(0, _height / 5 * trackerPosition);
       _textPainter.text = TextSpan(text: hourText, style: textStyle);
     } else {
       _textPainter.text = new TextSpan(

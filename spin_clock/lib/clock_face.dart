@@ -95,11 +95,11 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Good morning'),
+              // Text('Good morning'),
               RichText(
                   text: conditionText(style, colors[ClockTheme.info],
                       colors[ClockTheme.infoHightlight])),
-              Text('$_temperatureRange Today.'),
+              Text('$_temperatureRange Today'),
             ],
           ),
         ));

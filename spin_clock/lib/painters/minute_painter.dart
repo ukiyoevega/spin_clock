@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:flutter/semantics.dart';
 import 'package:spin_clock/theme.dart';
 
 class MinutePainter extends CustomPainter {
@@ -8,6 +9,7 @@ class MinutePainter extends CustomPainter {
   double _angle;
   double _height;
   double _borderWidth;
+  bool is24HourFormat;
   final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
   final TextPainter _textPainter = TextPainter(
@@ -19,7 +21,40 @@ class MinutePainter extends CustomPainter {
       fontWeight: FontWeight.w200,
       fontSize: 10.0);
 
-  MinutePainter(this.colors, {this.dateTime, this.trackerPosition});
+  MinutePainter(this.is24HourFormat, this.colors,
+      {this.dateTime, this.trackerPosition});
+
+  SemanticsBuilderCallback get semanticsBuilder => _buildSemantics;
+
+  List<CustomPainterSemantics> _buildSemantics(Size size) {
+    final List<CustomPainterSemantics> semantics = <CustomPainterSemantics>[];
+    var now = DateTime.now();
+    String label = 'It\'s ${now.hour}:${now.minute} now';
+    if (!is24HourFormat) {
+      int hour = (now.hour > 12) ? (now.hour - 12) : now.hour;
+      String marker = (now.hour >= 12) ? "PM" : "AM";
+      label = 'It\'s $hour:${now.minute} $marker now';
+    }
+    var rect = Rect.fromCenter(
+        center: Offset(size.width / 2, size.height / 2),
+        width: size.width * 0.75,
+        height: size.height / 3);
+    final CustomPainterSemantics semantic = new CustomPainterSemantics(
+      rect: rect,
+      properties: new SemanticsProperties(
+        label: label,
+        textDirection: TextDirection.ltr,
+      ),
+    );
+    semantics.add(semantic);
+    return semantics;
+  }
+
+  @override
+  bool shouldRebuildSemantics(MinutePainter oldDelegate) {
+    return oldDelegate.trackerPosition != trackerPosition ||
+        oldDelegate.is24HourFormat != is24HourFormat;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -7,7 +7,7 @@ class HourPainter extends CustomPainter {
   double _angle;
   double _borderWidth;
   double _height;
-  bool is24HourFormat = true;
+  bool is24HourFormat;
   final Map<ClockTheme, Color> colors;
   final DateTime dateTime;
   final double trackerPosition;

@@ -76,11 +76,11 @@ class ClockFacesPainter extends CustomPainter {
       bool isCurrentHour = !hourMode && i == 38;
       bool isCurrentMinute = hourMode && i == 7;
       if (isCurrentHour || isCurrentMinute) {
-        canvas.drawLine(new Offset(0.0, -radius+1),
+        canvas.drawLine(new Offset(0.0, -radius + 1),
             new Offset(0.0, -radius + borderWidth + 16), dialPaint);
       } else {
-        canvas.drawLine(new Offset(0.0, -radius+1),
-            new Offset(0.0, -radius + borderWidth-1), dialPaint);
+        canvas.drawLine(new Offset(0.0, -radius + 1),
+            new Offset(0.0, -radius + borderWidth - 1), dialPaint);
       }
       canvas.rotate(angle);
     }

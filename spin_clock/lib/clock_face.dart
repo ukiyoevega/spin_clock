@@ -55,7 +55,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
             fontFamily: 'PoppinsRegular',
             fontWeight: FontWeight.w100,
             fontSize: 14.0));
-    TextSpan _textWithWeather(String text) {
+    TextSpan _textWithWeather([String text = '']) {
       return TextSpan(style: style, text: text, children: [_weatherText]);
     }
 
@@ -77,6 +77,7 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
             text: '',
             children: [_weatherText, TextSpan(text: ', stay dry')]);
     }
+    return _textWithWeather();
   }
 
   @override
@@ -123,7 +124,8 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
           child: CustomPaint(size: size, painter: ClockFacesPainter(colors))),
       DialPaint(
           colors, DialType.hour, Duration(milliseconds: 600), _is24HourFormat),
-      DialPaint(colors, DialType.minute, Duration(milliseconds: 600)),
+      DialPaint(colors, DialType.minute, Duration(milliseconds: 600),
+          _is24HourFormat),
       DialPaint(colors, DialType.second, Duration(milliseconds: 300)),
       weatherPack,
     ]);

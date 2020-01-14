@@ -82,8 +82,8 @@ class MinutePainter extends CustomPainter {
     if (i == 38) {
       // largest digit for current minute
       int currentGrayScale = isLightMode
-          ? grayScale + 20 * trackerPosition.toInt()
-          : grayScale - 20 * trackerPosition.toInt(); // 51->71, 255->235
+          ? grayScale + (20 * trackerPosition).toInt()
+          : grayScale - (20 * trackerPosition).toInt(); // 51->71, 255->235
       final textStyle = TextStyle(
           color: Color.fromRGBO(
               currentGrayScale, currentGrayScale, currentGrayScale, 1),
@@ -97,8 +97,8 @@ class MinutePainter extends CustomPainter {
     } else if (i == 39) {
       // next up largest digit
       int currentGrayScale = isLightMode
-          ? grayScale - 20 * trackerPosition.toInt()
-          : grayScale + 20 * trackerPosition.toInt(); // 71->51, 235->255
+          ? grayScale - (20 * trackerPosition).toInt()
+          : grayScale + (20 * trackerPosition).toInt(); // 71->51, 235->255
       final textStyle = TextStyle(
           color: Color.fromRGBO(
               currentGrayScale, currentGrayScale, currentGrayScale, 1),

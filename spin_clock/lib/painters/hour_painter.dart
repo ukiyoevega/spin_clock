@@ -86,10 +86,13 @@ class HourPainter extends CustomPainter {
     int fontSize = _height ~/ 3 - 13;
     canvas.save();
     canvas.translate(0.0, -_radius + _borderWidth + 14);
+    int grayScale = colors[ClockTheme.currentGrayScale].red; // 51 240
+    int hourGrayScale = colors[ClockTheme.hourGrayScale].red; // 153 216
     if (i == 7) {
       // largest digit for current hour
-      int currentGrayScale = colors[ClockTheme.currentGrayScale].red +
-          102 * trackerPosition.toInt(); // 51->153
+      int currentGrayScale = grayScale +
+          ((hourGrayScale - grayScale) * trackerPosition)
+              .toInt(); // 51->153, 240->180
       final textStyle = TextStyle(
           color: Color.fromRGBO(
               currentGrayScale, currentGrayScale, currentGrayScale, 1),
@@ -101,8 +104,9 @@ class HourPainter extends CustomPainter {
       _textPainter.text = TextSpan(text: '$hourText', style: textStyle);
     } else if (i == 12) {
       // next up largest digit
-      int currentGrayScale = colors[ClockTheme.hourGrayScale].red -
-          102 * trackerPosition.toInt(); // 153->51
+      int currentGrayScale = hourGrayScale +
+          ((grayScale - hourGrayScale) * trackerPosition)
+              .toInt(); // 153->51, 180->240
       final textStyle = TextStyle(
           color: Color.fromRGBO(
               currentGrayScale, currentGrayScale, currentGrayScale, 1),

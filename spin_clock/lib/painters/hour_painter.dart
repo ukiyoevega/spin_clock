@@ -33,7 +33,7 @@ class HourPainter extends CustomPainter {
         -size.height * 0.8); // right margin 0.04, top margin 0.06
     _drawMarker(canvas: canvas);
     canvas.restore();
-    canvas.translate(15, size.height - 70.0);
+    canvas.translate(15, size.height - 75.0);
     _drawGreeting(canvas: canvas);
   }
 
@@ -46,14 +46,14 @@ class HourPainter extends CustomPainter {
 
   void _drawGreeting({Canvas canvas, int hour}) {
     List greetings = [
-      'Go to bed, you sleepy head', // 2
-      'Good morning', // 6
-      'How’s it going?', // 10
-      'Good afternoon', // 14
-      'Good evening', // 18
-      'Sweet dreams' // 22
+      'Go to bed, you sleepy head', 
+      'Good morning', 
+      'How’s it going?', 
+      'Good afternoon', 
+      'Good evening', 
+      'Sweet dreams' 
     ];
-    String greeting = greetings[(dateTime.hour - 2) ~/ 4];
+    String greeting = greetings[(DateTime.now().hour - 2) ~/ 4];
     _textPainter.text = TextSpan(
         text: greeting,
         style: TextStyle(

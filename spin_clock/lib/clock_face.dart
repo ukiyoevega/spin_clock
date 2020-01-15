@@ -13,8 +13,8 @@ class ClockFace extends StatefulWidget {
 }
 
 class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
-  var _condition, _temperatureRange = '';
-  WeatherCondition _weather;
+  var _weather, _temperatureRange = '';
+  WeatherCondition _weatherCondition;
   bool _is24HourFormat;
   @override
   void initState() {
@@ -40,44 +40,52 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
 
   void _updateModel() {
     setState(() {
-      _condition = widget.model.weatherString;
+      _weather = widget.model.weatherString;
       _temperatureRange = '${widget.model.low} - ${widget.model.highString}';
-      _weather = widget.model.weatherCondition;
+      _weatherCondition = widget.model.weatherCondition;
       _is24HourFormat = widget.model.is24HourFormat;
     });
   }
 
-  TextSpan conditionText(TextStyle style, Color color, Color hightLightColor) {
-    TextSpan _weatherText = TextSpan(
-        text: _condition,
-        style: TextStyle(
-            color: hightLightColor,
-            fontFamily: 'PoppinsRegular',
-            fontWeight: FontWeight.w100,
-            fontSize: 14.0));
-    TextSpan _textWithWeather([String text = '']) {
-      return TextSpan(style: style, text: text, children: [_weatherText]);
+  TextSpan conditionText(
+      TextStyle style, Color color, Map<ClockTheme, Color> colors) {
+    TextSpan _weatherText(Color color) {
+      return TextSpan(
+          text: _weather,
+          style: TextStyle(
+              color: color,
+              fontFamily: 'PoppinsRegular',
+              fontWeight: FontWeight.w100,
+              fontSize: 14.0));
     }
 
-    switch (_weather) {
+    TextSpan _weatherInfo(Color highlightColor, [String text = '']) {
+      return TextSpan(
+          style: style, text: text, children: [_weatherText(highlightColor)]);
+    }
+
+    switch (_weatherCondition) {
       case WeatherCondition.thunderstorm:
-        return _textWithWeather('Uh-oh, ');
+        return TextSpan(style: style, text: '', children: [
+          _weatherText(colors[ClockTheme.thunderstorm]),
+          TextSpan(text: ', stay dry')
+        ]);
       case WeatherCondition.sunny:
-        return _textWithWeather('Yea, It\'s ');
+        return _weatherInfo(colors[ClockTheme.sunny], 'Yea, It\'s ');
       case WeatherCondition.snowy:
-        return _textWithWeather('Aha, ');
+        return _weatherInfo(colors[ClockTheme.snowy], 'Aha, ');
       case WeatherCondition.windy:
       case WeatherCondition.foggy:
-        return _textWithWeather('It\'s ');
+        return _weatherInfo(colors[ClockTheme.infoHightlight], 'It\'s ');
       case WeatherCondition.cloudy:
-        return _textWithWeather('It looks ');
+        return _weatherInfo(colors[ClockTheme.infoHightlight], 'It looks ');
       case WeatherCondition.rainy:
-        return TextSpan(
-            style: style,
-            text: '',
-            children: [_weatherText, TextSpan(text: ', stay dry')]);
+        return TextSpan(style: style, text: '', children: [
+          _weatherText(colors[ClockTheme.rainy]),
+          TextSpan(text: ', stay dry')
+        ]);
     }
-    return _textWithWeather();
+    return _weatherInfo(colors[ClockTheme.infoHightlight]);
   }
 
   @override
@@ -89,17 +97,16 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
         fontFamily: 'PoppinsRegular',
         fontWeight: FontWeight.w200,
         fontSize: 14.0);
-    final weatherInfo = Padding(
+    final weatherAndTemperature = Padding(
         padding: EdgeInsets.only(left: 16),
         child: DefaultTextStyle(
           style: style,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Text('Good morning'),
               RichText(
-                  text: conditionText(style, colors[ClockTheme.info],
-                      colors[ClockTheme.infoHightlight])),
+                  text: conditionText(style, colors[ClockTheme.info], colors)),
+              SizedBox(height: 3),
               Text('$_temperatureRange Today'),
             ],
           ),
@@ -113,11 +120,11 @@ class _ClockFaceState extends State<ClockFace> with TickerProviderStateMixin {
         bottom: 10,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
-              padding: EdgeInsets.only(bottom: 7),
+              padding: EdgeInsets.only(bottom: 12),
               child: Image.asset(
-                  'images/${_condition + (needDark ? '_dark' : '')}.png',
+                  'images/${_weather + (needDark ? '_dark' : '')}.png',
                   width: size.width * 0.125)),
-          weatherInfo
+          weatherAndTemperature
         ]));
     Stack stack = Stack(children: <Widget>[
       RepaintBoundary(

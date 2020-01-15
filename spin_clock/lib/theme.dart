@@ -14,9 +14,17 @@ enum ClockTheme {
   colon,
   info,
   infoHightlight,
+  sunny,
+  thunderstorm,
+  rainy,
+  snowy
 }
 
 final lightMode = {
+  ClockTheme.sunny: Color(0xFFECB002),
+  ClockTheme.thunderstorm: Color(0xFFECB002),
+  ClockTheme.rainy: Color(0xFF2799FC), 
+  ClockTheme.snowy: Color(0xFF2799FC),
   ClockTheme.background: Color(0xFFECECEC),
   ClockTheme.shadow: Colors.black.withAlpha(30),
   ClockTheme.currentGrayScale: Color.fromRGBO(51, 51, 51, 1), // 51,
@@ -28,11 +36,15 @@ final lightMode = {
   ClockTheme.secondFace: Color(0xFFFDFDFD),
   ClockTheme.secondBorder: Color(0xFFEEEBEB),
   ClockTheme.colon: Color(0xFF333333),
-  ClockTheme.info: Color(0xFF666666),
+  ClockTheme.info: Color(0xFF888888),
   ClockTheme.infoHightlight: Color(0xFF000000),
 };
 
 final darkMode = {
+  ClockTheme.sunny: Color(0xFFECB002),
+  ClockTheme.thunderstorm: Color(0xFFECB002),
+  ClockTheme.rainy: Color(0xFF2799FC), 
+  ClockTheme.snowy: Color(0xFF2799FC),
   ClockTheme.background: Color(0xFF4C4C4C),
   ClockTheme.shadow: Colors.black.withAlpha(30),
   ClockTheme.currentGrayScale: Color.fromRGBO(240, 240, 240, 1), // 240,

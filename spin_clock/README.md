@@ -6,24 +6,23 @@ Spin Clock is an entry for [Flutter Clock Challenge](flutter.dev/clock).
 
 - Readability
 
-  - Spin clock use three different clock faces to represent hour, minute and second respectively. 
-
-  - The top right corner second face is sized to a small scale in contrast to the other two to avoid disturbance. 
-
-  - For hour and minute, relatively large font size is used to make sure the time is easy to read even from a distance.
+  - Spin clock uses three different dial plates to represent hour, minute and second respectively.
+  - For hour and minute dial, large font is used to ensure that time can be recognized even from a distance.
+  - Second dial at the upper right corner is designed to be much smaller than the other two dials to avoid disturbance. 
 
 - Fluency
 
-  - Animation between different seconds at top right in a way indicate time flows slowly. The position of the second number moves along circular orbit smoothly, while the size of it grows.
-  - The number become still when the second arrives. And start animating again showing next second starts. The whole process take place and last forever.
-  - To remain consistency, hour and minute animation works like the second's, excpet that the interval is set to hour and minute.
+  - Animation was designed to emphasize the time is ticking. 
+  - The numbers on the second dial move smoothly along the circular orbit. The next second number is enlarged while moving, staying in the middle of the orbit shortly to indicate arrival, and then moves to shrink. The whole process take place and last forever. 
+  - The hour and minute dials are animated similar to the second's, except that the interval is set to hours and minutes.
+
 
 - Beauty
 
-  - Intuitive colorful weather icons.
-  - Realistic looking clock faces.
-  - Visually effective dark mode and light mode. 
+  - Intuitive colorful weather icons
+  - Realistic looking clock faces
+  - Visually impressive dark mode and light mode
 
 - Accessbility
 
-  Spin clock support screen reading of time and weather, in addition to that, sufficient color contrast is used between digits and background, makes the  current time even more easy to read. 
+Spin clock support screen reading of time and weather. In addition to that, the high color contrast between numbers and background makes the current time easier to read. 

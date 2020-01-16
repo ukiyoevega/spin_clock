@@ -25,4 +25,4 @@ Spin Clock is an entry for [Flutter Clock Challenge](flutter.dev/clock).
 
 - Accessbility
 
-Spin clock support screen reading of time and weather. In addition to that, the high color contrast between numbers and background makes the current time easier to read. 
+  Spin clock support screen reading of time and weather. In addition to that, the high color contrast between numbers and background makes the current time easier to read. 

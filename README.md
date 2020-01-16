@@ -1,6 +1,6 @@
 ## Spin Clock
 
-Spin Clock is an entry for [Flutter Clock Challenge](flutter.dev/clock). 
+Spin Clock is an entry for [Flutter Clock Challenge](https://flutter.dev/clock). 
 
 ## Feature
 

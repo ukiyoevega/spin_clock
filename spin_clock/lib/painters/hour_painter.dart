@@ -46,8 +46,17 @@ class HourPainter extends CustomPainter {
         fontFamily: 'PoppinsMedium',
         fontSize: _height / 8.25,
         fontWeight: FontWeight.w200);
-    _textPainter.text =
-        TextSpan(text: dateTime.hour >= 12 ? "PM" : "AM", style: style);
+    String marker = '';
+    if (dateTime.hour == 23 && dateTime.minute == 59 && trackerPosition == 1) {
+      marker = "AM";
+    } else if (dateTime.hour == 11 &&
+        dateTime.minute == 59 &&
+        trackerPosition == 1) {
+      marker = "PM";
+    } else {
+      marker = dateTime.hour >= 12 ? "PM" : "AM";
+    }
+    _textPainter.text = TextSpan(text: marker, style: style);
     _textPainter.layout();
     var painterOffset =
         new Offset(-(_textPainter.width / 2), -(_textPainter.height / 2));
